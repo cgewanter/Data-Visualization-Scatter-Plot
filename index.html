@@ -6,6 +6,7 @@
         <!--<script src="https://d3js.org/d3.v5.js"></script>-->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <!--<script src="https://gist.github.com/nasser/5a430724769724fae0bf03fbf054263a.js"></script>-->
+
     </head>
 
     <body>    
@@ -15,7 +16,7 @@
         <div id="listDiv" class="menuhoverbox">
             Choose which data to show on mouse hover:
             <ul id="list"></ul>
-            <button id="apply">Apply</button>
+            <button id="apply" class="button">Apply</button>
         </div>
 
         <div id="menuContainer">
@@ -32,17 +33,23 @@
                 Choose z-axis field:
                 <ul id="dataZList"></ul>
             </div>
-            <button id="xyzBtn">Apply</button>
+            <button id="xyzBtn" class= "button">Apply</button>
+        </div>
+
+        <div id="traceBox" class="menuhoverbox">
+            Filter points by color by: 
+            <ul id="traceList"></ul>
+            <button id= "traceBtn" class="button">Apply</button>
         </div>
 
         <br/>
 
         <!--<p id="theP">Change the dot color to red:</p>
 
-<button id="button">RED</button>-->
+        <button id="button">RED</button>-->
 
-        <script src="js/script.js"></script>
         <script src="js/changeColor.js"></script>
+        <script src="js/script.js"></script>
 
     </body>
 </html>

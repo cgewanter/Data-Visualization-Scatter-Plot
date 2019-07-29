@@ -1,5 +1,9 @@
 /* eslint-disable no-console */
 
+//var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
+
+var filename = 'data.csv';
+
 var colHeaders;
 var dataSize;
 var mdChoices =[];
@@ -10,8 +14,10 @@ var xOption;
 var yOption;
 var zOption;
 
+var traceChoice;
+
 //Set up Metadata options hover checklist and x, y, z axes menu
-Plotly.d3.csv('data.csv', function(csv){
+Plotly.d3.csv(filename, function(csv){
 
     console.log("csv", csv);
 
@@ -33,7 +39,7 @@ Plotly.d3.csv('data.csv', function(csv){
 
         //for x, y, z data choices boxes:
         //filter out colHeaders[] to an array of the numeric options:
-        var numOptions = [];
+        //var numOptions = [];
         /*for (var i=0; i<colHeaders.length; i++){
             if (colHeaders[i])
         }*/
@@ -67,13 +73,24 @@ Plotly.d3.csv('data.csv', function(csv){
         zMenuDiv.appendChild(zRadio);
         zMenuDiv.appendChild(zLabel);
         zLabel.appendChild(document.createTextNode(colHeaders[i]));
+
+        //color-code traces menu
+        var cRadio = document.createElement("input");
+        var cLabel = document.createElement("label");
+        cRadio.type = "radio";
+        cRadio.value = colHeaders[i];
+        cRadio.name = "colortrace";
+        var traceDiv = document.getElementById("traceList");
+        traceDiv.appendChild(cRadio);
+        traceDiv.appendChild(cLabel);
+        traceDiv.appendChild(document.createTextNode(colHeaders[i]));     
     }
 
 });  //end metadata box display method
 
 //           *   *   *   *   *   *
 //call a function to set up the graph
-Plotly.d3.csv('data.csv', function(err, rows){
+Plotly.d3.csv(filename, function(err, rows){
 
     console.log("orig rows", rows);
     console.log("access col headers in method", colHeaders);
@@ -106,11 +123,11 @@ Plotly.d3.csv('data.csv', function(err, rows){
 
     //instantiate an array with the columnHeaders of numeric fields
     var numFields =[];
-    for (var i=0; i<colHeaders.length; i++){
-        var array = map.get(colHeaders[i]);
-        console.log("array " + i, array );
+    for (var k=0; k<colHeaders.length; k++){
+        var array = map.get(colHeaders[k]);
+        console.log("array " + k, array );
         if (!isNaN(array[0])){
-            numFields.push(colHeaders[i]);
+            numFields.push(colHeaders[k]);
         }
     }
     console.log("numFields array", numFields);
@@ -144,7 +161,6 @@ Plotly.d3.csv('data.csv', function(err, rows){
 
     console.log("xBtns", xBtns);
 
-
     var trace1 = {
         x: map.get(xOption), 
         y: map.get(yOption),  
@@ -155,29 +171,32 @@ Plotly.d3.csv('data.csv', function(err, rows){
         mode: 'markers',
         type: 'scatter3d',
         hoverinfo: "x+y+z+text",
-        hovertext: hoverText
+        hovertext: hoverText,
+        opacity: 0.4
     };
     var data = [trace1];
 
+    console.log('test', xOption,);
+
     var layout = {
+        scene:{
+            xaxis:{title: xOption},
+            yaxis:{title: yOption},
+            zaxis:{title: zOption} 
+        },
         autosize: false,
         width: 1000,
         height: 600,
-        xaxis: {
-            title: 'x-title',
-            automargin: true
-        },
         margin:{
             l:20,
             r:0,
             b:20,
             t:30
         },
-        title: 'Chart Title'
+        title: 'Data Source: ' + filename
     };
     Plotly.newPlot('graphDiv', data, layout);
 });
-
 
 document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
 
@@ -207,14 +226,21 @@ function onClickXYZ(){
             console.log("z", z);
         }
     });
-    
-    var update = {x: [map.get(xOption.value)],
-                  y: [map.get(yOption.value)],
-                  z: [map.get(zOption.value)]
-                 };
-    Plotly.restyle(graphDiv, update);
-}
 
+    var dataUpdate = {
+        x: [map.get(xOption.value)],
+        y: [map.get(yOption.value)],
+        z: [map.get(zOption.value)]
+    };
+
+    var layoutUpdate = {
+        'scene.xaxis.title': xOption.value,
+        'scene.yaxis.title': yOption.value,
+        'scene.zaxis.title': zOption.value
+    };
+
+    Plotly.update("graphDiv", dataUpdate, layoutUpdate);
+}
 document.getElementById("apply").onclick= function(){onClickApply()};
 
 function onClickApply(){
@@ -241,6 +267,18 @@ function onClickApply(){
     //Plotly.restyle(graphDiv, update);
 }
 
+document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
+
+function onClickTraceBtn(){
+    var trcBtns = document.getElementsByName("colortrace");
+    trcBtns.forEach(function(t){
+        if(t.checked){
+            traceChoice = t;
+            console.log("traceChoice", traceChoice);
+        }
+    });
+}
+
 function getHovText(){
     //clear out hoverText so does not contain all prev data
     //Put empty string as current hoverText to avoid 'undefined'
@@ -251,14 +289,12 @@ function getHovText(){
     //outer and inner loop to populate the hovertext
     //outer: goes through each data point
     //inner: goes through each field (x, y, z, ... name ... etc)
-    for(var i=0; i<dataSize; i++){
-        var key;
-        var iter = map.keys();
+    for(var m=0; m<dataSize; m++){
 
         for (var j=0; j<mdChoices.length; j++){
             var header = mdChoices[j];
             var array = map.get(header);
-            hoverText[i] += header + ": " + array[i] +  '<br>';
+            hoverText[m] += header + ": " + array[m] +  '<br>';
         }
     }
     console.log("hoverText in method", hoverText);

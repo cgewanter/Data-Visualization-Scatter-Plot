@@ -11,6 +11,12 @@ body{
     color: red;
 }
 
+.button {
+    background-color:darkturquoise;
+    border-radius: 25px;
+    font-family: "Agency FB";
+    font-size: 14pt;
+}
 
 .center{
     display: block;
@@ -44,25 +50,38 @@ font-size:20pt
 #menuContainer{
     float: left;
     width: 50%;
+    border: 2px solid turquoise;
+    border-radius: 25px;
+    border-width:medium;
+    text-align: center;
+}
+
+.menuContainer{
+    float: left;
+    border: 2px solid turquoise;
+    border-radius: 25px;
+    border-width:medium;
+    text-align: center;
 }
 
 .menubox{
     float: left;
     height: 70px;
     border-radius: 25px;
-    border: 2px solid turquoise;
-    border-width:medium;
+    border: dotted black;
+    border-width:thin;
     text-align: center;
     align-content: center;
     padding: 10px;
     color:gray;
     font-family: "Agency FB";
     font-size: 16pt;
+    margin: 2pt;
 }
 
 .menuhoverbox{
     float: left;
-    height: 150px;
+    height: 127px;
     border-radius: 25px;
     border: 2px solid turquoise;
     border-width: medium;
@@ -71,5 +90,5 @@ font-size:20pt
     padding: 10px;
     color:gray;
     font-family: "Agency FB";
-    font-size: 18pt;
+    font-size: 16pt;
 }
