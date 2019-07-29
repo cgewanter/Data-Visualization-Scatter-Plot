@@ -1,0 +1,75 @@
+body{
+}
+
+#graphDiv {
+    display: inline;
+    margin: 0 auto;
+    width: 49%;
+}
+
+#theP {
+    color: red;
+}
+
+
+.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.graph{
+
+    width: 49%;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+/*#listDiv {
+float: left;
+height: 150px;
+border-radius: 25px;
+border: 2px solid turquoise;
+border-width:medium;
+width: 35%;
+text-align: center;
+align-content: center;
+padding: 10px;
+color:gray;
+font-family: "Agency FB";
+font-size:20pt
+}*/
+
+#menuContainer{
+    float: left;
+    width: 50%;
+}
+
+.menubox{
+    float: left;
+    height: 70px;
+    border-radius: 25px;
+    border: 2px solid turquoise;
+    border-width:medium;
+    text-align: center;
+    align-content: center;
+    padding: 10px;
+    color:gray;
+    font-family: "Agency FB";
+    font-size: 16pt;
+}
+
+.menuhoverbox{
+    float: left;
+    height: 150px;
+    border-radius: 25px;
+    border: 2px solid turquoise;
+    border-width: medium;
+    text-align: center;
+    align-content: center;
+    padding: 10px;
+    color:gray;
+    font-family: "Agency FB";
+    font-size: 18pt;
+}
