@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-alert, no-console */
 
 //var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
 
@@ -15,8 +15,9 @@ var yOption;
 var zOption;
 
 var traceChoice;
+var traceMap;
 
-//Set up Metadata options hover checklist and x, y, z axes menu
+//Set up hover checklist and x, y, z axes menu, and trace menu
 Plotly.d3.csv(filename, function(csv){
 
     console.log("csv", csv);
@@ -85,8 +86,7 @@ Plotly.d3.csv(filename, function(csv){
         traceDiv.appendChild(cLabel);
         traceDiv.appendChild(document.createTextNode(colHeaders[i]));     
     }
-
-});  //end metadata box display method
+});  //end setting up menu method
 
 //           *   *   *   *   *   *
 //call a function to set up the graph
@@ -176,8 +176,6 @@ Plotly.d3.csv(filename, function(err, rows){
     };
     var data = [trace1];
 
-    console.log('test', xOption,);
-
     var layout = {
         scene:{
             xaxis:{title: xOption},
@@ -199,6 +197,11 @@ Plotly.d3.csv(filename, function(err, rows){
 });
 
 document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
+
+document.getElementById("apply").onclick= function(){onClickApply()};
+
+document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
+
 
 function onClickXYZ(){
     var xBtns = document.getElementsByName("xaxis");
@@ -241,7 +244,6 @@ function onClickXYZ(){
 
     Plotly.update("graphDiv", dataUpdate, layoutUpdate);
 }
-document.getElementById("apply").onclick= function(){onClickApply()};
 
 function onClickApply(){
     //clear out the mdChoices array so can start over from what is checked now
@@ -267,16 +269,57 @@ function onClickApply(){
     //Plotly.restyle(graphDiv, update);
 }
 
-document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
 function onClickTraceBtn(){
+    //save the chosen field in traceChoice variable
     var trcBtns = document.getElementsByName("colortrace");
     trcBtns.forEach(function(t){
         if(t.checked){
-            traceChoice = t;
+            traceChoice = t.value;
             console.log("traceChoice", traceChoice);
         }
     });
+    //make an array of all the different values in that field
+    var allVals = map.get(traceChoice);
+    var uniqueVals =[];
+    console.log("allVals", allVals);
+    allVals.forEach(function(val){
+        if (!uniqueVals.includes(val)){
+            uniqueVals.push(val);
+        }
+    });
+    console.log("uniqueVals", uniqueVals);
+
+    //for each unique value (=each trace)
+    uniqueVals.forEach(
+        function(val){
+            var innerMap = new Map();
+
+            //for each column header: filter the array into a new array
+            var innerArray =[];
+            for(var i=0; i<colHeaders.length; i++){
+                //clear out the inner array
+                innerArray=[];
+                var allXs = map.get(colHeaders[i]);
+                console.log("allXs",allXs);
+                //for each value in this column header
+                for(var x=0; x<allXs.length; x++){
+                    console.log("allVals[i] vs val", allVals[x] + " vs " + val);
+                    //if the value at this header is the same as val, push the x-value onto the inner array
+                    if (allVals[x]==val){
+                        innerArray.push(allXs[x]);
+                    }
+                }
+                console.log("innerArray" + i, innerArray);
+                //put this new filtered array in a map with the col header as key
+                innerMap.set(colHeaders[i], innerArray);
+            };
+
+            console.log("innerMap", innerMap);
+            
+            //traceMap.set(val, )
+        }
+    );
 }
 
 function getHovText(){
@@ -290,7 +333,6 @@ function getHovText(){
     //outer: goes through each data point
     //inner: goes through each field (x, y, z, ... name ... etc)
     for(var m=0; m<dataSize; m++){
-
         for (var j=0; j<mdChoices.length; j++){
             var header = mdChoices[j];
             var array = map.get(header);
@@ -300,3 +342,5 @@ function getHovText(){
     console.log("hoverText in method", hoverText);
     return hoverText;
 }
+
+/* eslint-enable no-alert, no-console */
