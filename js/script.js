@@ -15,7 +15,8 @@ var yOption;
 var zOption;
 
 var traceChoice;
-var traceMap;
+var traceMap = new Map();
+var keys = [];
 
 //Set up hover checklist and x, y, z axes menu, and trace menu
 Plotly.d3.csv(filename, function(csv){
@@ -100,7 +101,8 @@ Plotly.d3.csv(filename, function(err, rows){
             return row[key];
         });
     }
-    //unpack all of the data into a map
+
+    //unpack all of the data into a map (using above-defined unpack function)
     map = new Map();
     for(var j=0; j<colHeaders.length; j++){
         var key = colHeaders[j];
@@ -108,18 +110,13 @@ Plotly.d3.csv(filename, function(err, rows){
         dataSize = value.length;
         map.set(key, value);
     }
-    console.log("map", map);             
+    console.log("map", map);    
 
-    //use the above defined unpack function to populate arrays with the data
-
-    //Put empty string as current hoverText to avoid 'undefined'
-    for (var i =0; i<dataSize; i++){
-        hoverText[i] ="";
-    } 
-
-    hoverText = getHovText();
-
-    console.log("hoverText after method call", hoverText);
+    //first time - put all data into traceMap as one trace with "all-data" as the key
+    traceMap = new Map();
+    traceMap.set("all-data", map);
+    keys.push("all-data");
+    console.log(traceMap);
 
     //instantiate an array with the columnHeaders of numeric fields
     var numFields =[];
@@ -137,7 +134,7 @@ Plotly.d3.csv(filename, function(err, rows){
     yOption = numFields[1];
     zOption = numFields[2];
 
-    //set the radio buttons selected to correct ones
+    //set the radio buttons selected to fields for axes
     var xBtns = document.getElementsByName("xaxis");
     xBtns.forEach(function(x){
         if (x.value == xOption){
@@ -158,14 +155,22 @@ Plotly.d3.csv(filename, function(err, rows){
             z.checked =true;
         }
     });
-
     console.log("xBtns", xBtns);
 
+    //Put empty string as current hoverText to avoid 'undefined'
+    for (var i =0; i<dataSize; i++){
+        hoverText[i] ="";
+    } 
+    //get the hovertext (only works for first initial graph with one trace)
+    hoverText = getHovText();
+    console.log("hoverText after method call", hoverText); 
+
+    //initial starting trace with all data in one trace
     var trace1 = {
         x: map.get(xOption), 
         y: map.get(yOption),  
         z: map.get(zOption),
-        name: 'x-name',
+        name: 'all-data',
         text:  [map.get('id'), map.get('names')],
         textposition: 'top center',
         mode: 'markers',
@@ -196,6 +201,8 @@ Plotly.d3.csv(filename, function(err, rows){
     Plotly.newPlot('graphDiv', data, layout);
 });
 
+document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
+
 document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
 
 document.getElementById("apply").onclick= function(){onClickApply()};
@@ -210,7 +217,7 @@ function onClickXYZ(){
             xOption = x;
             console.log("x", x);
             console.log("xOption",xOption.value);
-            console.log(map.get(xOption.value));
+            //console.log(map.get(xOption.value));
         }
     });
 
@@ -230,10 +237,25 @@ function onClickXYZ(){
         }
     });
 
+    //for each trace:
+    var xArray=[];
+    keys.forEach(function(key){
+        //for each column:
+        var array =[];
+
+        var t = traceMap.get(key).get(xOption.value);
+        console.log("t", t);
+        array.push(t);
+
+        console.log("array", array);
+        xArray.push(array);
+    });
+    console.log(xArray);
+
     var dataUpdate = {
-        x: [map.get(xOption.value)],
-        y: [map.get(yOption.value)],
-        z: [map.get(zOption.value)]
+        x: xArray,
+        /*y: [map.get(yOption.value)],
+        z: [map.get(zOption.value)]*/
     };
 
     var layoutUpdate = {
@@ -271,6 +293,15 @@ function onClickApply(){
 
 
 function onClickTraceBtn(){
+    keys =[];
+    var prevSize =1;
+    try{
+        prevSize = traceMap.size;
+    }
+    catch(err){
+        console.log(err.message);
+    }
+
     //save the chosen field in traceChoice variable
     var trcBtns = document.getElementsByName("colortrace");
     trcBtns.forEach(function(t){
@@ -320,9 +351,11 @@ function onClickTraceBtn(){
             console.log("innerMap", innerMap);  
             //put the inner map as a value into the big outer map
             traceMap.set(val, innerMap);
+            keys.push(val);
         }
     );
     console.log("traceMap", traceMap);
+    console.log("keys", keys);
 
     //now replot the graph based on the new traces 
     var traces =[];
@@ -346,7 +379,13 @@ function onClickTraceBtn(){
     });
     console.log("traces: " , traces);
     var data = traces;
-    Plotly.deleteTraces("graphDiv", 0);
+    var delArray = [0];
+    console.log("prevSize", prevSize);
+    for (var t=1; t<prevSize; t++){
+        delArray.push(t);
+    }
+    console.log("delArray", delArray);
+    Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", traces);
 }
 
