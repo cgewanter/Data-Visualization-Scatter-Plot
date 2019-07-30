@@ -290,10 +290,14 @@ function onClickTraceBtn(){
     });
     console.log("uniqueVals", uniqueVals);
 
+    //instantiate the new Map that will have each unique val as a key:
+    traceMap = new Map();
+    
     //for each unique value (=each trace)
+    var innerMap;
     uniqueVals.forEach(
         function(val){
-            var innerMap = new Map();
+            innerMap = new Map();
 
             //for each column header: filter the array into a new array
             var innerArray =[];
@@ -314,12 +318,11 @@ function onClickTraceBtn(){
                 //put this new filtered array in a map with the col header as key
                 innerMap.set(colHeaders[i], innerArray);
             };
-
-            console.log("innerMap", innerMap);
-            
-            //traceMap.set(val, )
+            console.log("innerMap", innerMap);  
+            traceMap.set(val, innerMap);
         }
     );
+    console.log("traceMap", traceMap);
 }
 
 function getHovText(){
