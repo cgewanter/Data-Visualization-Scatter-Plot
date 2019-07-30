@@ -241,7 +241,7 @@ function onClickXYZ(){
         'scene.yaxis.title': yOption.value,
         'scene.zaxis.title': zOption.value
     };
-
+    //need to use update (vs. restyle or relayout) bec changing the data itself and also the layout(for axes names)
     Plotly.update("graphDiv", dataUpdate, layoutUpdate);
 }
 
@@ -292,13 +292,12 @@ function onClickTraceBtn(){
 
     //instantiate the new Map that will have each unique val as a key:
     traceMap = new Map();
-    
+
     //for each unique value (=each trace)
     var innerMap;
     uniqueVals.forEach(
         function(val){
-            innerMap = new Map();
-
+            innerMap = new Map(); //map where each colHeader is key and its values are the value
             //for each column header: filter the array into a new array
             var innerArray =[];
             for(var i=0; i<colHeaders.length; i++){
@@ -315,14 +314,40 @@ function onClickTraceBtn(){
                     }
                 }
                 console.log("innerArray" + i, innerArray);
-                //put this new filtered array in a map with the col header as key
+                //put this new filtered array into the map with the col header as key
                 innerMap.set(colHeaders[i], innerArray);
             };
             console.log("innerMap", innerMap);  
+            //put the inner map as a value into the big outer map
             traceMap.set(val, innerMap);
         }
     );
     console.log("traceMap", traceMap);
+
+    //now replot the graph based on the new traces 
+    var traces =[];
+    var theTrace;
+    uniqueVals.forEach(function(val){
+        console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
+        theTrace = {
+            x: traceMap.get(val).get(xOption),
+            y: traceMap.get(val).get(yOption),
+            z: traceMap.get(val).get(zOption),
+            name: val,
+            text:  [traceMap.get(val), map.get('names')],
+            textposition: 'top center',
+            mode: 'markers',
+            type: 'scatter3d',
+            hoverinfo: "x+y+z+text",
+            hovertext: hoverText,
+            opacity: 0.4
+        };
+        traces.push(theTrace);
+    });
+    console.log("traces: " , traces);
+    var data = traces;
+    Plotly.deleteTraces("graphDiv", 0);
+    Plotly.addTraces("graphDiv", traces);
 }
 
 function getHovText(){
