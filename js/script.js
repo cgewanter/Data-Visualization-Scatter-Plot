@@ -8,6 +8,7 @@ var colHeaders;
 var dataSize;
 var mdChoices =[];
 var hoverText =[];
+var wHovertext =[];
 var map;
 
 var xOption;
@@ -141,14 +142,12 @@ Plotly.d3.csv(filename, function(err, rows){
             x.checked =true;
         }
     });
-
     var yBtns = document.getElementsByName("yaxis");
     yBtns.forEach(function(y){
         if (y.value == yOption){
             y.checked =true;
         }
     });
-
     var zBtns = document.getElementsByName("zaxis");
     zBtns.forEach(function(z){
         if (z.value == zOption){
@@ -159,11 +158,10 @@ Plotly.d3.csv(filename, function(err, rows){
 
     //Put empty string as current hoverText to avoid 'undefined'
     for (var i =0; i<dataSize; i++){
-        hoverText[i] ="";
+        hoverText[i] = "";
     } 
-    //get the hovertext (only works for first initial graph with one trace)
-    hoverText = getHovText();
-    console.log("hoverText after method call", hoverText); 
+    //get the hovertext (right now only works for first initial graph with one trace)
+    wHoverText = getHoverText();
 
     //initial starting trace with all data in one trace
     var trace1 = {
@@ -176,7 +174,7 @@ Plotly.d3.csv(filename, function(err, rows){
         mode: 'markers',
         type: 'scatter3d',
         hoverinfo: "x+y+z+text",
-        hovertext: hoverText,
+        hovertext: wHoverText,
         opacity: 0.4
     };
     var data = [trace1];
@@ -205,10 +203,9 @@ document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
 
 document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
 
-document.getElementById("apply").onclick= function(){onClickApply()};
+document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
-
 
 function onClickXYZ(){
     var xBtns = document.getElementsByName("xaxis");
@@ -220,7 +217,6 @@ function onClickXYZ(){
             //console.log(map.get(xOption.value));
         }
     });
-
     var yBtns = document.getElementsByName("yaxis");
     yBtns.forEach(function(y){
         if (y.checked){
@@ -228,7 +224,6 @@ function onClickXYZ(){
             console.log("y", y);
         }
     });
-
     var zBtns = document.getElementsByName("zaxis");
     zBtns.forEach(function(z){
         if (z.checked){
@@ -267,7 +262,7 @@ function onClickXYZ(){
     Plotly.update("graphDiv", dataUpdate, layoutUpdate);
 }
 
-function onClickApply(){
+function onClickHover(){
     //clear out the mdChoices array so can start over from what is checked now
     mdChoices =[];
     var mdList = document.getElementById("list");
@@ -279,18 +274,25 @@ function onClickApply(){
             }
         }
     }
-    console.log("checked: " + mdChoices);
+    console.log("checked hover choices:", mdChoices);
 
-    hoverText = getHovText();
+    hoverText = getHoverText();
     console.log("hoverText", hoverText);
+    var counter =0;
 
-    var update = {
-        hovertext: hoverText
-    }
-    console.log("mdChoices", mdChoices);
-    //Plotly.restyle(graphDiv, update);
+    traceMap.forEach(function(value, key, map){
+        console.log("in foreach, hoverText for " + key, hoverText.get(key));
+        var update = {
+            hovertext: hoverText.get(key)
+        }
+        console.log("current key", key);
+        console.log("counter rt before restyle: " , counter);
+        console.log("hoverText.get(key)", hoverText.get(key));
+        console.log("update: for " + key , update);
+        Plotly.restyle("graphDiv", update, counter);
+        counter++;
+    });
 }
-
 
 function onClickTraceBtn(){
     keys =[];
@@ -389,25 +391,82 @@ function onClickTraceBtn(){
     Plotly.addTraces("graphDiv", traces);
 }
 
-function getHovText(){
-    //clear out hoverText so does not contain all prev data
-    //Put empty string as current hoverText to avoid 'undefined'
-    for (var i =0; i<dataSize; i++){
-        hoverText[i] ="";
-    } 
+function getHoverText(){
+    wHoverText = new Map();
+    traceMap.forEach(function(value, key, map){
+        console.log("in traceMap.forEach");
+        console.log("trace:", key);
+        console.log("value: ", value);
+        console.log("map: ", map);
 
-    //outer and inner loop to populate the hovertext
-    //outer: goes through each data point
-    //inner: goes through each field (x, y, z, ... name ... etc)
-    for(var m=0; m<dataSize; m++){
-        for (var j=0; j<mdChoices.length; j++){
-            var header = mdChoices[j];
-            var array = map.get(header);
-            hoverText[m] += header + ": " + array[m] +  '<br>';
+        htArray = getInnerHovText(key);
+        console.log("htArray for " +key, htArray);
+        wHoverText.set(key, htArray);
+    });
+    console.log("wHoverText", wHoverText);
+                return wHoverText;
+                }
+
+                function getInnerHovText(key){
+        console.log("in inner ht method");
+        //clear out hoverText so does not contain all prev data
+        //Put empty string as current hoverText to avoid 'undefined'
+        var innerMap = traceMap.get(key);
+        console.log("inner map", innerMap);
+
+        var innerHover =[];
+
+        for (var i =0; i<innerMap.get(colHeaders[0]).length; i++){
+            innerHover[i] ="";
+        } 
+        console.log("innerHover after populate with blank strings", innerHover);
+
+        //outer and inner loop to populate the hovertext
+        //outer: goes through each data point
+        //inner: goes through each field (x, y, z, ... name ... etc)
+
+        //for each point
+        for(var m=0; m<innerMap.get(colHeaders[0]).length; m++){
+            //for each md choice
+            for (var j=0; j<mdChoices.length; j++){
+                var header = mdChoices[j];
+                var array = innerMap.get(header);
+                innerHover[m] += header + ": " + array[m] +  '<br>';
+            }
         }
-    }
-    console.log("hoverText in method", hoverText);
-    return hoverText;
-}
+        console.log("innerHover for " + key, innerHover);
 
-/* eslint-enable no-alert, no-console */
+        //console.log("hoverText in method", hoverText);
+        return innerHover;
+    }
+
+    function oldGetHoverText(){
+        //populate with empty strings
+
+        //for each trace
+        for (var j=0; j<traceMap.size; j++){
+            var innerArray =[];
+            //for each point
+            for(var i=0; i<traceMap.get(keys[j]).length; i++){
+                innerArray[i]="";
+            }
+            wHovertext[j] = innerArray;
+        }
+        //for each trace
+        for(var t=0; t<traceMap.length; t++){
+            //for each point
+            for(var p=0; p<trace.length; p++){
+                //for each metadata option selected
+                var pointArray =[];
+                for (var s=0; s<mdChoices.length; s++){
+                    var header = mdChoices[s];
+                    var array = traceMap.get(keys[t]).get(header);
+                    pointArray[p]+= header + ": " + array[s] + '<br';
+                }
+                wHoverText[t] = pointArray;
+            }                
+        }
+        console.log("wHovertext", wHovertext);
+    }
+
+    /* eslint-enable no-alert, no-console */
