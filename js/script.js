@@ -213,8 +213,7 @@ function onClickXYZ(){
     xBtns.forEach(function(x){
         if (x.checked){
             xOption = x;
-            console.log("x", x);
-            console.log("xOption",xOption.value);
+            console.log("x:",xOption.value);
             //console.log(map.get(xOption.value));
         }
     });
@@ -222,18 +221,42 @@ function onClickXYZ(){
     yBtns.forEach(function(y){
         if (y.checked){
             yOption = y;
-            console.log("y", y);
+            console.log("y:", yOption.value);
         }
     });
     var zBtns = document.getElementsByName("zaxis");
     zBtns.forEach(function(z){
         if (z.checked){
             zOption =z;
-            console.log("z", z);
+            console.log("z:", zOption.value);
         }
     });
+    console.log("traceMap", traceMap);
 
-    //for each trace:
+
+
+    //traceMap.forEach(function(value, key, map){
+
+    var iter = traceMap.keys();
+
+    key = iter.next().value;
+    console.log("key", key);
+    console.log(key + " traceMap.get(key).get(xOption.value)", traceMap.get(key).get(xOption.value));
+
+    var dataUpdate={
+        x: traceMap.get(key).get(xOption.value),
+        y: traceMap.get(key).get(yOption.value),
+        z: traceMap.get(key).get(zOption.value)
+    };
+    var layoutUpdate = {
+        'scene.xaxis.title': xOption.value,
+        'scene.yaxis.title': yOption.value,
+        'scene.zaxis.title': zOption.value
+    };
+    Plotly.update("graphDiv", dataUpdate, layoutUpdate, 0);
+    //});
+
+    /*//for each trace:
     var xArray=[];
     keys.forEach(function(key){
         //for each column:
@@ -250,17 +273,16 @@ function onClickXYZ(){
 
     var dataUpdate = {
         x: xArray,
-        /*y: [map.get(yOption.value)],
-        z: [map.get(zOption.value)]*/
+        //y: [map.get(yOption.value)],
+        //z: [map.get(zOption.value)]
     };
 
     var layoutUpdate = {
         'scene.xaxis.title': xOption.value,
         'scene.yaxis.title': yOption.value,
         'scene.zaxis.title': zOption.value
-    };
+    };*/
     //need to use update (vs. restyle or relayout) bec changing the data itself and also the layout(for axes names)
-    Plotly.update("graphDiv", dataUpdate, layoutUpdate);
 }
 
 function onClickHover(){
@@ -286,6 +308,7 @@ function onClickHover(){
             x: traceMap.get(key).get(xOption),
             y: traceMap.get(key).get(yOption),
             z: traceMap.get(key).get(zOption),
+            name: key,
             mode: 'markers',
             type: 'scatter3d',
             hoverinfo: "x+y+z+text",
@@ -368,7 +391,7 @@ function onClickTraceBtn(){
                 console.log("allXs",allXs);
                 //for each value in this column header
                 for(var x=0; x<allXs.length; x++){
-                    console.log("allVals[i] vs val", allVals[x] + " vs " + val);
+                    //console.log("allVals[i] vs val", allVals[x] + " vs " + val);
                     //if the value at this header is the same as val, push the x-value onto the inner array
                     if (allVals[x]==val){
                         innerArray.push(allXs[x]);
@@ -390,7 +413,11 @@ function onClickTraceBtn(){
     //now replot the graph based on the new traces 
     var traces =[];
     var theTrace;
+
+    hoverText = getHoverText();
+
     uniqueVals.forEach(function(val){
+
         console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
         theTrace = {
             x: traceMap.get(val).get(xOption),
@@ -402,7 +429,7 @@ function onClickTraceBtn(){
             mode: 'markers',
             type: 'scatter3d',
             hoverinfo: "x+y+z+text",
-            hovertext: hoverText,
+            hovertext: hoverText.get(val),
             opacity: 0.4
         };
         traces.push(theTrace);
@@ -468,33 +495,5 @@ function getInnerHovText(key){
     return innerHover;
 }
 
-function oldGetHoverText(){
-    //populate with empty strings
-
-    //for each trace
-    for (var j=0; j<traceMap.size; j++){
-        var innerArray =[];
-        //for each point
-        for(var i=0; i<traceMap.get(keys[j]).length; i++){
-            innerArray[i]="";
-        }
-        wHovertext[j] = innerArray;
-    }
-    //for each trace
-    for(var t=0; t<traceMap.length; t++){
-        //for each point
-        for(var p=0; p<trace.length; p++){
-            //for each metadata option selected
-            var pointArray =[];
-            for (var s=0; s<mdChoices.length; s++){
-                var header = mdChoices[s];
-                var array = traceMap.get(keys[t]).get(header);
-                pointArray[p]+= header + ": " + array[s] + '<br';
-            }
-            wHoverText[t] = pointArray;
-        }                
-    }
-    console.log("wHovertext", wHovertext);
-}
 
 /* eslint-enable no-alert, no-console */
