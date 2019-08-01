@@ -18,6 +18,7 @@ var zOption;
 var traceChoice;
 var traceMap = new Map();
 var keys = [];
+var prevSize;
 
 //Set up hover checklist and x, y, z axes menu, and trace menu
 Plotly.d3.csv(filename, function(csv){
@@ -199,7 +200,7 @@ Plotly.d3.csv(filename, function(err, rows){
     Plotly.newPlot('graphDiv', data, layout);
 });
 
-document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
+//document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
 
 document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
 
@@ -278,8 +279,35 @@ function onClickHover(){
 
     hoverText = getHoverText();
     console.log("hoverText", hoverText);
-    var counter =0;
 
+    var newTraces =[];
+    traceMap.forEach(function(value, key, map){
+        var theTrace ={
+            x: traceMap.get(key).get(xOption),
+            y: traceMap.get(key).get(yOption),
+            z: traceMap.get(key).get(zOption),
+            mode: 'markers',
+            type: 'scatter3d',
+            hoverinfo: "x+y+z+text",
+            hovertext: hoverText.get(key),
+            opacity: 0.4
+        }
+        console.log("theTrace", theTrace);
+        newTraces.push(theTrace);
+    });
+    console.log("traces", newTraces);
+    console.log("prevSize", traceMap.size);
+    var delArray=[];
+    for (var t=0; t<traceMap.size; t++){
+        delArray.push(t);
+    }
+    console.log("about to redo graph");
+    console.log("delArray", delArray);
+    Plotly.deleteTraces("graphDiv", delArray);
+    Plotly.addTraces("graphDiv", newTraces);
+
+
+    /*var counter =0;
     traceMap.forEach(function(value, key, map){
         console.log("in foreach, hoverText for " + key, hoverText.get(key));
         var update = {
@@ -291,12 +319,12 @@ function onClickHover(){
         console.log("update: for " + key , update);
         Plotly.restyle("graphDiv", update, counter);
         counter++;
-    });
+    });*/
 }
 
 function onClickTraceBtn(){
     keys =[];
-    var prevSize =1;
+    prevSize =1;
     try{
         prevSize = traceMap.size;
     }
@@ -404,69 +432,69 @@ function getHoverText(){
         wHoverText.set(key, htArray);
     });
     console.log("wHoverText", wHoverText);
-                return wHoverText;
-                }
+    return wHoverText;
+}
 
-                function getInnerHovText(key){
-        console.log("in inner ht method");
-        //clear out hoverText so does not contain all prev data
-        //Put empty string as current hoverText to avoid 'undefined'
-        var innerMap = traceMap.get(key);
-        console.log("inner map", innerMap);
+function getInnerHovText(key){
+    console.log("in inner ht method");
+    //clear out hoverText so does not contain all prev data
+    //Put empty string as current hoverText to avoid 'undefined'
+    var innerMap = traceMap.get(key);
+    console.log("inner map", innerMap);
 
-        var innerHover =[];
+    var innerHover =[];
 
-        for (var i =0; i<innerMap.get(colHeaders[0]).length; i++){
-            innerHover[i] ="";
-        } 
-        console.log("innerHover after populate with blank strings", innerHover);
+    for (var i =0; i<innerMap.get(colHeaders[0]).length; i++){
+        innerHover[i] ="";
+    } 
+    console.log("innerHover after populate with blank strings", innerHover);
 
-        //outer and inner loop to populate the hovertext
-        //outer: goes through each data point
-        //inner: goes through each field (x, y, z, ... name ... etc)
+    //outer and inner loop to populate the hovertext
+    //outer: goes through each data point
+    //inner: goes through each field (x, y, z, ... name ... etc)
 
+    //for each point
+    for(var m=0; m<innerMap.get(colHeaders[0]).length; m++){
+        //for each md choice
+        for (var j=0; j<mdChoices.length; j++){
+            var header = mdChoices[j];
+            var array = innerMap.get(header);
+            innerHover[m] += header + ": " + array[m] +  '<br>';
+        }
+    }
+    console.log("innerHover for " + key, innerHover);
+
+    //console.log("hoverText in method", hoverText);
+    return innerHover;
+}
+
+function oldGetHoverText(){
+    //populate with empty strings
+
+    //for each trace
+    for (var j=0; j<traceMap.size; j++){
+        var innerArray =[];
         //for each point
-        for(var m=0; m<innerMap.get(colHeaders[0]).length; m++){
-            //for each md choice
-            for (var j=0; j<mdChoices.length; j++){
-                var header = mdChoices[j];
-                var array = innerMap.get(header);
-                innerHover[m] += header + ": " + array[m] +  '<br>';
-            }
+        for(var i=0; i<traceMap.get(keys[j]).length; i++){
+            innerArray[i]="";
         }
-        console.log("innerHover for " + key, innerHover);
-
-        //console.log("hoverText in method", hoverText);
-        return innerHover;
+        wHovertext[j] = innerArray;
     }
-
-    function oldGetHoverText(){
-        //populate with empty strings
-
-        //for each trace
-        for (var j=0; j<traceMap.size; j++){
-            var innerArray =[];
-            //for each point
-            for(var i=0; i<traceMap.get(keys[j]).length; i++){
-                innerArray[i]="";
+    //for each trace
+    for(var t=0; t<traceMap.length; t++){
+        //for each point
+        for(var p=0; p<trace.length; p++){
+            //for each metadata option selected
+            var pointArray =[];
+            for (var s=0; s<mdChoices.length; s++){
+                var header = mdChoices[s];
+                var array = traceMap.get(keys[t]).get(header);
+                pointArray[p]+= header + ": " + array[s] + '<br';
             }
-            wHovertext[j] = innerArray;
-        }
-        //for each trace
-        for(var t=0; t<traceMap.length; t++){
-            //for each point
-            for(var p=0; p<trace.length; p++){
-                //for each metadata option selected
-                var pointArray =[];
-                for (var s=0; s<mdChoices.length; s++){
-                    var header = mdChoices[s];
-                    var array = traceMap.get(keys[t]).get(header);
-                    pointArray[p]+= header + ": " + array[s] + '<br';
-                }
-                wHoverText[t] = pointArray;
-            }                
-        }
-        console.log("wHovertext", wHovertext);
+            wHoverText[t] = pointArray;
+        }                
     }
+    console.log("wHovertext", wHovertext);
+}
 
-    /* eslint-enable no-alert, no-console */
+/* eslint-enable no-alert, no-console */
