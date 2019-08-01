@@ -4,7 +4,11 @@ body{
 #graphDiv {
     display: inline;
     float: right;
-    margin-right:10px;
+    
+}
+
+#allMenuContainer{
+    
 }
 
 #theP {
@@ -63,6 +67,11 @@ font-size:20pt
     border-radius: 25px;
     border-width:medium;
     text-align: center;
+}
+
+#titlebox{
+    height: auto;
+    width: auto;
 }
 
 .menubox{

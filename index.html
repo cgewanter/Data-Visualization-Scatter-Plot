@@ -11,43 +11,52 @@
     <body>    
         <br/>
         <br/>
+        <div id="titlebox" class="menubox">
+            <p>Enter Chart Title:</p>
+            <input id="titleInput" type=text onfocus="this.value=''"> 
+            <button id="titleBtn" class="button">Apply</button>
+        </div>
+        <br/>
+        <br/>
         <div id="graphDiv" class="graph"></div>
-        <div id="listDiv" class="menuhoverbox">
-            Choose which data to show on mouse hover:
-            <ul id="list"></ul>
-            <button id="hoverBtn" class="button">Apply</button>
-        </div>
-
-        <div id="menuContainer">
-
-            <div id="dataXDiv" class="menubox">
-                Choose x-axis field:
-                <ul id="dataXList"></ul>
+        <div id="allMenuContainer">
+            <div id="listDiv" class="menuhoverbox">
+                Choose which data to show on mouse hover:
+                <ul id="list"></ul>
+                <button id="hoverBtn" class="button">Apply</button>
             </div>
-            <div id="dataYDiv" class="menubox">
-                Choose y-axis field:
-                <ul id="dataYList"></ul>
-            </div>
-            <div id="dataZDiv" class="menubox">
-                Choose z-axis field:
-                <ul id="dataZList"></ul>
-            </div>
-            <button id="xyzBtn" class= "button">Apply</button>
-        </div>
 
-        <div id="traceBox" class="menuhoverbox">
-            Filter points by color by: 
-            <ul id="traceList"></ul>
-            <button id= "traceBtn" class="button">Apply</button>
+            <div id="menuContainer">
+
+                <div id="dataXDiv" class="menubox">
+                    Choose x-axis field:
+                    <ul id="dataXList"></ul>
+                </div>
+                <div id="dataYDiv" class="menubox">
+                    Choose y-axis field:
+                    <ul id="dataYList"></ul>
+                </div>
+                <div id="dataZDiv" class="menubox">
+                    Choose z-axis field:
+                    <ul id="dataZList"></ul>
+                </div>
+                <button id="xyzBtn" class= "button">Apply</button>
+            </div>
+
+            <div id="traceBox" class="menuhoverbox">
+                Filter points by color by: 
+                <ul id="traceList"></ul>
+                <button id= "traceBtn" class="button">Apply</button>
+            </div>
         </div>
-<!--    <button id="applyAll" class= "button">Apply all</button>-->
+        <!--    <button id="applyAll" class= "button">Apply all</button>-->
         <br/>
 
         <!--<p id="theP">Change the dot color to red:</p>
 
 <button id="button">RED</button>-->
 
-<!--        <script src="js/changeColor.js"></script>-->
+        <!--        <script src="js/changeColor.js"></script>-->
         <script src="js/script.js"></script>
 
     </body>

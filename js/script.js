@@ -208,6 +208,8 @@ document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
+document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
+
 function getXAxisSelection(){
     var xBtns = document.getElementsByName("xaxis");
     xBtns.forEach(function(x){
@@ -503,6 +505,16 @@ function getInnerHovText(key){
 
     //console.log("hoverText in method", hoverText);
     return innerHover;
+}
+
+function onClickTitleBtn(){
+    var tElem = document.getElementById("titleInput");
+    var newTitle = tElem.value;
+    console.log("title", newTitle);
+    var update = {
+        title: newTitle
+    }
+    Plotly.relayout("graphDiv", update);
 }
 
 
