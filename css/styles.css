@@ -3,8 +3,8 @@ body{
 
 #graphDiv {
     display: inline;
-    margin: 0 auto;
-    width: 49%;
+    float: right;
+    margin-right:10px;
 }
 
 #theP {
@@ -54,6 +54,7 @@ font-size:20pt
     border-radius: 25px;
     border-width:medium;
     text-align: center;
+    height: 200px;
 }
 
 .menuContainer{
@@ -75,13 +76,15 @@ font-size:20pt
     padding: 10px;
     color:gray;
     font-family: "Agency FB";
-    font-size: 16pt;
+    font-size: 14pt;
     margin: 2pt;
+    width: 25%;
+    height: 175px;
 }
 
 .menuhoverbox{
     float: left;
-    height: 127px;
+    height: 200px;
     border-radius: 25px;
     border: 2px solid turquoise;
     border-width: medium;
@@ -90,5 +93,6 @@ font-size:20pt
     padding: 10px;
     color:gray;
     font-family: "Agency FB";
-    font-size: 16pt;
+    font-size: 14pt;
+    width: 30%;
 }
