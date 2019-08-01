@@ -209,11 +209,6 @@ document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
 function getXAxisSelection(){
-    
-}
-
-
-function onClickXYZ(){
     var xBtns = document.getElementsByName("xaxis");
     xBtns.forEach(function(x){
         if (x.checked){
@@ -222,6 +217,9 @@ function onClickXYZ(){
             //console.log(map.get(xOption.value));
         }
     });
+    return xOption;
+}
+function getYAxisSelection(){
     var yBtns = document.getElementsByName("yaxis");
     yBtns.forEach(function(y){
         if (y.checked){
@@ -229,13 +227,25 @@ function onClickXYZ(){
             console.log("y:", yOption.value);
         }
     });
-    var zBtns = document.getElementsByName("zaxis");
+    return yOption;
+}
+function getZAxisSelection(){
+  var zBtns = document.getElementsByName("zaxis");
     zBtns.forEach(function(z){
         if (z.checked){
             zOption =z;
             console.log("z:", zOption.value);
         }
     });
+    return zOption;
+}
+
+function onClickXYZ(){
+    
+    xOption = getXAxisSelection();
+    yOption = getYAxisSelection();
+    zOption = getZAxisSelection();
+    
     console.log("traceMap", traceMap);
 
     var hoverText = getHoverText();
@@ -455,6 +465,10 @@ function onClickTraceBtn(){
     var theTrace;
 
     hoverText = getHoverText();
+    
+    xOption = getXAxisSelection();
+    yOption = getYAxisSelection();
+    zOption = getZAxisSelection();
 
     uniqueVals.forEach(function(val){
         console.log("xOption", xOption);
