@@ -284,55 +284,6 @@ function onClickXYZ(){
         'scene.zaxis.title': zOption.value
     }; 
     Plotly.relayout("graphDiv", layoutUpdate);
-
-    //traceMap.forEach(function(value, key, map){
-
-    /*var iter = traceMap.keys();
-
-    key = iter.next().value;
-    console.log("key", key);
-    console.log(key + " traceMap.get(key).get(xOption.value)", traceMap.get(key).get(xOption.value));
-
-    var dataUpdate={
-        x: traceMap.get(key).get(xOption.value),
-        y: traceMap.get(key).get(yOption.value),
-        z: traceMap.get(key).get(zOption.value)
-    };
-    var layoutUpdate = {
-        'scene.xaxis.title': xOption.value,
-        'scene.yaxis.title': yOption.value,
-        'scene.zaxis.title': zOption.value
-    };
-    Plotly.update("graphDiv", dataUpdate, layoutUpdate, 0);*/
-    //});
-
-    /*//for each trace:
-    var xArray=[];
-    keys.forEach(function(key){
-        //for each column:
-        var array =[];
-
-        var t = traceMap.get(key).get(xOption.value);
-        console.log("t", t);
-        array.push(t);
-
-        console.log("array", array);
-        xArray.push(array);
-    });
-    console.log(xArray);
-
-    var dataUpdate = {
-        x: xArray,
-        //y: [map.get(yOption.value)],
-        //z: [map.get(zOption.value)]
-    };
-
-    var layoutUpdate = {
-        'scene.xaxis.title': xOption.value,
-        'scene.yaxis.title': yOption.value,
-        'scene.zaxis.title': zOption.value
-    };*/
-    //need to use update (vs. restyle or relayout) bec changing the data itself and also the layout(for axes names)
 }
 
 function onClickHover(){
@@ -351,6 +302,10 @@ function onClickHover(){
 
     hoverText = getHoverText();
     console.log("hoverText", hoverText);
+    
+    xOption = getXAxisSelection();
+    yOption = getYAxisSelection();
+    zOption = getZAxisSelection();
 
     var newTraces =[];
     traceMap.forEach(function(value, key, map){
