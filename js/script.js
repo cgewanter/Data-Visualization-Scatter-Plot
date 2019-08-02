@@ -1,8 +1,8 @@
 /* eslint-disable no-alert, no-console */
 
-//var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
+var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
 
-var filename = 'data.csv';
+filename = 'data.csv';
 
 var colHeaders;
 var dataSize;
@@ -15,8 +15,9 @@ var xOption;
 var yOption;
 var zOption;
 
-var traceChoice;
+var traceChoice = "all-data";
 var traceMap = new Map();
+var origMap;
 var keys = [];
 var prevSize;
 
@@ -60,7 +61,7 @@ Plotly.d3.csv(filename, function(csv){
         xItem.style.listStyle="none";
         xLabel.appendChild(document.createTextNode(colHeaders[i]));
         xMenuDiv.appendChild(xItem);
-        
+
         var yItem = document.createElement("li");
         var yRadio = document.createElement("input");
         var yLabel = document.createElement("label");
@@ -127,7 +128,9 @@ Plotly.d3.csv(filename, function(err, rows){
     traceMap = new Map();
     traceMap.set("all-data", map);
     keys.push("all-data");
-    console.log(traceMap);
+    console.log("orig traceMap", traceMap);
+    origMap = traceMap;
+    console.log("origMap", origMap);
 
     //instantiate an array with the columnHeaders of numeric fields
     var numFields =[];
@@ -183,7 +186,7 @@ Plotly.d3.csv(filename, function(err, rows){
         textposition: 'top center',
         mode: 'markers',
         type: 'scatter3d',
-        hoverinfo: "x+y+z+text",
+        hoverinfo: "text",
         hovertext: wHoverText,
         opacity: 0.4
     };
@@ -195,16 +198,16 @@ Plotly.d3.csv(filename, function(err, rows){
             yaxis:{title: yInit},
             zaxis:{title: zInit} 
         },
-        autosize: true,
+        autosize: false,
         width: 600,
         height: 600,
         margin:{
-            l:20,
+            l:10,
             r:0,
             b:20,
             t:30
         },
-        title: 'Data Source: ' + filename
+        title: 'Enter Chart Title on Left'
     };
     Plotly.newPlot('graphDiv', data, layout);
 });
@@ -218,6 +221,8 @@ document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
 document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
+
+document.getElementById("resetFilterBtn").onclick=function(){onClickResetFilter()};
 
 function getXAxisSelection(){
     var xBtns = document.getElementsByName("xaxis");
@@ -241,7 +246,7 @@ function getYAxisSelection(){
     return yOption;
 }
 function getZAxisSelection(){
-  var zBtns = document.getElementsByName("zaxis");
+    var zBtns = document.getElementsByName("zaxis");
     zBtns.forEach(function(z){
         if (z.checked){
             zOption =z;
@@ -252,11 +257,11 @@ function getZAxisSelection(){
 }
 
 function onClickXYZ(){
-    
+
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
-    
+
     console.log("traceMap", traceMap);
 
     var hoverText = getHoverText();
@@ -271,7 +276,7 @@ function onClickXYZ(){
             name: key,
             mode: 'markers',
             type: 'scatter3d',
-            hoverinfo: "x+y+z+text",
+            hoverinfo: "text",
             hovertext: hoverText.get(key),
             opacity: 0.4
         }
@@ -313,7 +318,7 @@ function onClickHover(){
 
     hoverText = getHoverText();
     console.log("hoverText", hoverText);
-    
+
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
@@ -327,7 +332,7 @@ function onClickHover(){
             name: key,
             mode: 'markers',
             type: 'scatter3d',
-            hoverinfo: "x+y+z+text",
+            hoverinfo: "text",
             hovertext: hoverText.get(key),
             opacity: 0.4
         }
@@ -371,14 +376,17 @@ function onClickTraceBtn(){
         console.log(err.message);
     }
 
+    var checked= false;
     //save the chosen field in traceChoice variable
     var trcBtns = document.getElementsByName("colortrace");
     trcBtns.forEach(function(t){
         if(t.checked){
             traceChoice = t.value;
+            checked =true;
             console.log("traceChoice", traceChoice);
         }
     });
+    console.log("ANYTHING SELECTED: " , checked);
     //make an array of all the different values in that field
     var allVals = map.get(traceChoice);
     var uniqueVals =[];
@@ -392,46 +400,54 @@ function onClickTraceBtn(){
 
     //instantiate the new Map that will have each unique val as a key:
     traceMap = new Map();
+    console.log("TRACEMAP-BEFORE", traceMap);
 
-    //for each unique value (=each trace)
-    var innerMap;
-    uniqueVals.forEach(
-        function(val){
-            innerMap = new Map(); //map where each colHeader is key and its values are the value
-            //for each column header: filter the array into a new array
-            var innerArray =[];
-            for(var i=0; i<colHeaders.length; i++){
-                //clear out the inner array
-                innerArray=[];
-                var allXs = map.get(colHeaders[i]);
-                console.log("allXs",allXs);
-                //for each value in this column header
-                for(var x=0; x<allXs.length; x++){
-                    //console.log("allVals[i] vs val", allVals[x] + " vs " + val);
-                    //if the value at this header is the same as val, push the x-value onto the inner array
-                    if (allVals[x]==val){
-                        innerArray.push(allXs[x]);
+    if (!checked){
+        traceMap = origMap;
+        console.log("none checked. tracemap: ", traceMap);
+    }
+
+    else{
+        //for each unique value (=each trace)
+        var innerMap;
+        uniqueVals.forEach(
+            function(val){
+                innerMap = new Map(); //map where each colHeader is key and its values are the value
+                //for each column header: filter the array into a new array
+                var innerArray =[];
+                for(var i=0; i<colHeaders.length; i++){
+                    //clear out the inner array
+                    innerArray=[];
+                    var allXs = map.get(colHeaders[i]);
+                    //console.log("allXs",allXs);
+                    //for each value in this column header
+                    for(var x=0; x<allXs.length; x++){
+                        //console.log("allVals[i] vs val", allVals[x] + " vs " + val);
+                        //if the value at this header is the same as val, push the x-value onto the inner array
+                        if (allVals[x]==val){
+                            innerArray.push(allXs[x]);
+                        }
                     }
-                }
-                console.log("innerArray" + i, innerArray);
-                //put this new filtered array into the map with the col header as key
-                innerMap.set(colHeaders[i], innerArray);
-            };
-            console.log("innerMap", innerMap);  
-            //put the inner map as a value into the big outer map
-            traceMap.set(val, innerMap);
-            keys.push(val);
-        }
-    );
-    console.log("traceMap", traceMap);
-    console.log("keys", keys);
+                    //console.log("innerArray" + i, innerArray);
+                    //put this new filtered array into the map with the col header as key
+                    innerMap.set(colHeaders[i], innerArray);
+                };
+                //console.log("innerMap", innerMap);  
+                //put the inner map as a value into the big outer map
+                traceMap.set(val, innerMap);
+                keys.push(val);
+            }
+        );
+        console.log("traceMap", traceMap);
+        console.log("keys", keys);
+    }
 
     //now replot the graph based on the new traces 
     var traces =[];
     var theTrace;
 
     hoverText = getHoverText();
-    
+
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
@@ -439,7 +455,7 @@ function onClickTraceBtn(){
     uniqueVals.forEach(function(val){
         console.log("xOption", xOption);
         console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
-        
+
         theTrace = {
             x: traceMap.get(val).get(xOption.value),
             y: traceMap.get(val).get(yOption.value),
@@ -449,7 +465,7 @@ function onClickTraceBtn(){
             textposition: 'top center',
             mode: 'markers',
             type: 'scatter3d',
-            hoverinfo: "x+y+z+text",
+            hoverinfo: "text",
             hovertext: hoverText.get(val),
             opacity: 0.4
         };
@@ -524,6 +540,18 @@ function onClickTitleBtn(){
         title: newTitle
     }
     Plotly.relayout("graphDiv", update);
+}
+
+function onClickResetFilter(){
+
+    //go through all the buttons and unselect
+    var trcBtns = document.getElementsByName("colortrace");
+    console.log("about to deselect everything");
+    trcBtns.forEach(function(t){
+        t.checked=false;
+    });
+
+    onClickTraceBtn();
 }
 
 
