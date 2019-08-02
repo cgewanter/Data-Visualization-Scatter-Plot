@@ -47,36 +47,45 @@ Plotly.d3.csv(filename, function(csv){
         /*for (var i=0; i<colHeaders.length; i++){
             if (colHeaders[i])
         }*/
-
+        var xItem = document.createElement("li");
         var xRadio = document.createElement("input");
         var xLabel = document.createElement("label");
+        //var newLine = document.createElement()
         xRadio.type = "radio";
         xRadio.value= colHeaders[i];
         xRadio.name = "xaxis";
         var xMenuDiv = document.getElementById("dataXList");
-        xMenuDiv.appendChild(xRadio);
-        xMenuDiv.appendChild(xLabel);
+        xItem.appendChild(xRadio);
+        xItem.appendChild(xLabel);
+        xItem.style.listStyle="none";
         xLabel.appendChild(document.createTextNode(colHeaders[i]));
-
+        xMenuDiv.appendChild(xItem);
+        
+        var yItem = document.createElement("li");
         var yRadio = document.createElement("input");
         var yLabel = document.createElement("label");
         yRadio.type = "radio";
         yRadio.value= colHeaders[i];
         yRadio.name = "yaxis";
         var yMenuDiv = document.getElementById("dataYList");
-        yMenuDiv.appendChild(yRadio);
-        yMenuDiv.appendChild(yLabel);
+        yItem.appendChild(yRadio);
+        yItem.appendChild(yLabel);
+        yItem.style.listStyle="none";
         yLabel.appendChild(document.createTextNode(colHeaders[i]));
+        yMenuDiv.appendChild(yItem);
 
+        var zItem = document.createElement("li");
         var zRadio = document.createElement("input");
         var zLabel = document.createElement("label");
         zRadio.type = "radio";
         zRadio.value= colHeaders[i];
         zRadio.name ="zaxis";
         var zMenuDiv = document.getElementById("dataZList");
-        zMenuDiv.appendChild(zRadio);
-        zMenuDiv.appendChild(zLabel);
+        zItem.appendChild(zRadio);
+        zItem.appendChild(zLabel);
+        zItem.style.listStyle="none";
         zLabel.appendChild(document.createTextNode(colHeaders[i]));
+        zMenuDiv.appendChild(zItem);
 
         //color-code traces menu
         var cRadio = document.createElement("input");
@@ -186,8 +195,8 @@ Plotly.d3.csv(filename, function(err, rows){
             yaxis:{title: yInit},
             zaxis:{title: zInit} 
         },
-        autosize: false,
-        width: 1000,
+        autosize: true,
+        width: 600,
         height: 600,
         margin:{
             l:20,
