@@ -1,8 +1,8 @@
 /* eslint-disable no-alert, no-console */
 
-var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
+//var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
 
-filename = 'data.csv';
+//filename = 'data.csv';
 
 var colHeaders;
 var dataSize;
@@ -244,13 +244,20 @@ document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
 
 document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
-document.getElementById("submitFile").onclick=function(){onClickFileGo()};
+document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
 
 function onClickFileGo(){
     var theFile = document.getElementById("file-input").value;
     console.log("theFile", theFile);
     setUpMenus();
     setUpGraph();
+    var menus = document.getElementsByClassName("menuouterbox");
+    console.log("Menus: " , menus);
+    
+    for(var i=0; i< menus.length; i++){
+        menus[i].style.display="inline-block";
+        console.log("menus[i]", menus[i]);
+    }
 }
 
 function onClickOpenFile(){
@@ -262,7 +269,7 @@ function onClickOpenFile(){
     function showfileName(event){
         var inputVal = event.srcElement;
         var fileName = inputVal.files[0].name;
-        document.getElementById("fileName").innerHTML = fileName;
+        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + fileName;
         filename = fileName;
     }
 }

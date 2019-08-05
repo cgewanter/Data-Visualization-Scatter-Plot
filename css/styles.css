@@ -2,12 +2,38 @@ body{
     width: 80%;
 }
 
+#openFileBox{
+    display:inline-block;
+    width: 400px;
+    height: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#fileOpenBtn{
+   float:left; 
+}
+
+#goFileBtn{
+    float: right;
+}
+
+#fileNameSpan{
+    float:left;
+    width: 287px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
 #graphDiv {
     display: inline;
     float:right;
     width: 30%;   
     margin-top: 10pt;
 }
+
 
 #allMenuContainer{
     margin-left: 10px;
@@ -17,7 +43,6 @@ body{
     color: red;
 }
 
-#openFileDiv{}
 
 .menutitle{
     margin:2pt;
@@ -88,8 +113,15 @@ font-size:20pt
 #titlebox{
     height: auto;
     width: auto;
-    margin: 10pt;
+    margin:13pt;
 }
+
+#titleInput{
+    border-radius: 15px;
+    height: 14pt;
+    padding: 4pt
+}
+
 
 .menubox{
     float: left;
@@ -120,6 +152,7 @@ font-size:20pt
     font-family: "Calibri";
     font-size: 14pt;
     width: auto;
+    display:none;
 }
 
 .modebar{

@@ -9,15 +9,15 @@
     </head>
 
     <body>
-        
+
         <div id= "openFileBox" class= "menuouterbox">
-                <p class=menutitle>Choose a File</p>
-                <br/>
-                <button id="fileOpenBtn" class="button">Open...</button>
-                <input id="file-input" type="file" style="display: none;" />
-                <span id="fileName">[your file name</span>
-                <button id="submitFile" class="button">Go</button>
-            </div>
+            <p class=menutitle>Choose a File</p>
+            <p>Choose the file to use as a data source for the graph:</p>
+            <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
+            <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
+            <span id="fileNameSpan">&nbsp [No file selected]</span>
+            <button id="goFileBtn" class="button">Go</button>
+        </div>
         <div id="graphDiv" class="graph"></div>
 
         <div id="allMenuContainer">
@@ -36,7 +36,7 @@
                 <button id="hoverBtn" class="button">Apply</button>
             </div>
 
-            <div id="menuContainer">
+            <div id="menuContainer" class ="menuouterbox">
 
                 <div id="dataXDiv" class="menubox">
                     <p class= "menutitle">X-axis field:</p>
@@ -65,11 +65,6 @@
         <!--    <button id="applyAll" class= "button">Apply all</button>-->
         <br/>
 
-        <!--<p id="theP">Change the dot color to red:</p>
-
-<button id="button">RED</button>-->
-
-        <!--        <script src="js/changeColor.js"></script>-->
         <script src="js/script.js"></script>
 
     </body>
