@@ -8,27 +8,31 @@
         <!--<script src="https://gist.github.com/nasser/5a430724769724fae0bf03fbf054263a.js"></script>-->
     </head>
 
-    <body> 
-
-        <button onclick="document.getElementById('file-input').click();">Open</button>
-        <input id="file-input" type="file" name="name" style="display: none;" />
-
+    <body>
+        
+        <div id= "openFileBox" class= "menuouterbox">
+                <p class=menutitle>Choose a File</p>
+                <br/>
+                <button id="fileOpenBtn" class="button">Open...</button>
+                <input id="file-input" type="file" style="display: none;" />
+                <span id="fileName">[your file name</span>
+                <button id="submitFile" class="button">Go</button>
+            </div>
         <div id="graphDiv" class="graph"></div>
 
         <div id="allMenuContainer">
 
-            <div id="titlebox" class="menuhoverbox">
+            <div id="titlebox" class="menuouterbox">
                 <p class= "menutitle">Enter Chart Title:</p>
-
                 <p></p>
                 <input id="titleInput" type=text onfocus="this.value=''"> 
                 <button id="titleBtn" class="button">Apply</button>
             </div>
 
-            <div id="listDiv" class="menuhoverbox">
+            <div id="listDiv" class="menuouterbox">
                 <p class= "menutitle">Choose which data to show on mouse hover:</p>
 
-                <ul id="list"></ul>
+                <ul id="hoverList"></ul>
                 <button id="hoverBtn" class="button">Apply</button>
             </div>
 
@@ -50,7 +54,7 @@
                 <button id="xyzBtn" class= "button">Apply</button>
             </div>
 
-            <div id="traceBox" class="menuhoverbox">
+            <div id="traceBox" class="menuouterbox">
                 <p class= "menutitle">Filter points by color by: </p>
 
                 <ul id="traceList"></ul>

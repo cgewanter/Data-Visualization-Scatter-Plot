@@ -21,196 +21,214 @@ var origMap;
 var keys = [];
 var prevSize;
 
-//Set up hover checklist and x, y, z axes menu, and trace menu
-Plotly.d3.csv(filename, function(csv){
 
-    console.log("csv", csv);
+function setUpMenus(){
+    //Set up hover checklist and x, y, z axes menu, and trace menu
+    Plotly.d3.csv(filename, function(csv){
 
-    csv.forEach(function(row){
-        colHeaders = Object.keys(row);
-    });
-    console.log("colHeaders", colHeaders);
+        console.log("csv", csv);
 
-    for(var i=0; i<colHeaders.length; i++){
-        //for hover checkboxes options
-        var checkBox = document.createElement("input");
-        var label = document.createElement("label");
-        checkBox.type = "checkbox";
-        checkBox.value=colHeaders[i];
-        var theDiv = document.getElementById("list");
-        theDiv.appendChild(checkBox);
-        theDiv.appendChild(label);
-        label.appendChild(document.createTextNode(colHeaders[i]));  
+        csv.forEach(function(row){
+            colHeaders = Object.keys(row);
+        });
+        console.log("colHeaders", colHeaders);
 
-        //for x, y, z data choices boxes:
-        //filter out colHeaders[] to an array of the numeric options:
-        //var numOptions = [];
-        /*for (var i=0; i<colHeaders.length; i++){
+        function clearDiv(div){
+            //clear out the theHovDiv
+            while(div.firstChild){
+                div.removeChild(div.firstChild);
+            }
+        }
+
+        var theHovDiv = document.getElementById("hoverList");
+        var xMenuDiv = document.getElementById("dataXList");
+        var yMenuDiv = document.getElementById("dataYList");
+        var zMenuDiv = document.getElementById("dataZList");
+        var traceDiv = document.getElementById("traceList");
+
+        var divArray = [theHovDiv, xMenuDiv, yMenuDiv, zMenuDiv, traceDiv];
+        divArray.forEach(function(div){
+            clearDiv(div);
+        });
+
+        for(var i=0; i<colHeaders.length; i++){
+            //for hover checkboxes options
+            var checkBox = document.createElement("input");
+            var label = document.createElement("label");
+            checkBox.type = "checkbox";
+            checkBox.value=colHeaders[i];
+            theHovDiv.appendChild(checkBox);
+            theHovDiv.appendChild(label);
+            label.appendChild(document.createTextNode(colHeaders[i]));  
+
+            //for x, y, z data choices boxes:
+            //filter out colHeaders[] to an array of the numeric options:
+            //var numOptions = [];
+            /*for (var i=0; i<colHeaders.length; i++){
             if (colHeaders[i])
         }*/
-        var xItem = document.createElement("li");
-        var xRadio = document.createElement("input");
-        var xLabel = document.createElement("label");
-        //var newLine = document.createElement()
-        xRadio.type = "radio";
-        xRadio.value= colHeaders[i];
-        xRadio.name = "xaxis";
-        var xMenuDiv = document.getElementById("dataXList");
-        xItem.appendChild(xRadio);
-        xItem.appendChild(xLabel);
-        xItem.style.listStyle="none";
-        xLabel.appendChild(document.createTextNode(colHeaders[i]));
-        xMenuDiv.appendChild(xItem);
+            var xItem = document.createElement("li");
+            var xRadio = document.createElement("input");
+            var xLabel = document.createElement("label");
+            //var newLine = document.createElement()
+            xRadio.type = "radio";
+            xRadio.value= colHeaders[i];
+            xRadio.name = "xaxis";
+            xItem.appendChild(xRadio);
+            xItem.appendChild(xLabel);
+            xItem.style.listStyle="none";
+            xLabel.appendChild(document.createTextNode(colHeaders[i]));
+            xMenuDiv.appendChild(xItem);
 
-        var yItem = document.createElement("li");
-        var yRadio = document.createElement("input");
-        var yLabel = document.createElement("label");
-        yRadio.type = "radio";
-        yRadio.value= colHeaders[i];
-        yRadio.name = "yaxis";
-        var yMenuDiv = document.getElementById("dataYList");
-        yItem.appendChild(yRadio);
-        yItem.appendChild(yLabel);
-        yItem.style.listStyle="none";
-        yLabel.appendChild(document.createTextNode(colHeaders[i]));
-        yMenuDiv.appendChild(yItem);
+            var yItem = document.createElement("li");
+            var yRadio = document.createElement("input");
+            var yLabel = document.createElement("label");
+            yRadio.type = "radio";
+            yRadio.value= colHeaders[i];
+            yRadio.name = "yaxis";
+            yItem.appendChild(yRadio);
+            yItem.appendChild(yLabel);
+            yItem.style.listStyle="none";
+            yLabel.appendChild(document.createTextNode(colHeaders[i]));
+            yMenuDiv.appendChild(yItem);
 
-        var zItem = document.createElement("li");
-        var zRadio = document.createElement("input");
-        var zLabel = document.createElement("label");
-        zRadio.type = "radio";
-        zRadio.value= colHeaders[i];
-        zRadio.name ="zaxis";
-        var zMenuDiv = document.getElementById("dataZList");
-        zItem.appendChild(zRadio);
-        zItem.appendChild(zLabel);
-        zItem.style.listStyle="none";
-        zLabel.appendChild(document.createTextNode(colHeaders[i]));
-        zMenuDiv.appendChild(zItem);
+            var zItem = document.createElement("li");
+            var zRadio = document.createElement("input");
+            var zLabel = document.createElement("label");
+            zRadio.type = "radio";
+            zRadio.value= colHeaders[i];
+            zRadio.name ="zaxis";
+            zItem.appendChild(zRadio);
+            zItem.appendChild(zLabel);
+            zItem.style.listStyle="none";
+            zLabel.appendChild(document.createTextNode(colHeaders[i]));
+            zMenuDiv.appendChild(zItem);
 
-        //color-code traces menu
-        var cRadio = document.createElement("input");
-        var cLabel = document.createElement("label");
-        cRadio.type = "radio";
-        cRadio.value = colHeaders[i];
-        cRadio.name = "colortrace";
-        var traceDiv = document.getElementById("traceList");
-        traceDiv.appendChild(cRadio);
-        traceDiv.appendChild(cLabel);
-        traceDiv.appendChild(document.createTextNode(colHeaders[i]));     
-    }
-});  //end setting up menu method
-
+            //color-code traces menu
+            var cRadio = document.createElement("input");
+            var cLabel = document.createElement("label");
+            cRadio.type = "radio";
+            cRadio.value = colHeaders[i];
+            cRadio.name = "colortrace";
+            traceDiv.appendChild(cRadio);
+            traceDiv.appendChild(cLabel);
+            traceDiv.appendChild(document.createTextNode(colHeaders[i]));     
+        }
+    });  //end setting up menu method
+}
 //           *   *   *   *   *   *
 //call a function to set up the graph
-Plotly.d3.csv(filename, function(err, rows){
 
-    console.log("orig rows", rows);
-    console.log("access col headers in method", colHeaders);
+function setUpGraph(){
+    Plotly.d3.csv(filename, function(err, rows){
 
-    function unpack(rows, key){
-        return rows.map(function(row){
-            return row[key];
+        console.log("orig rows", rows);
+        console.log("access col headers in method", colHeaders);
+
+        function unpack(rows, key){
+            return rows.map(function(row){
+                return row[key];
+            });
+        }
+
+        //unpack all of the data into a map (using above-defined unpack function)
+        map = new Map();
+        for(var j=0; j<colHeaders.length; j++){
+            var key = colHeaders[j];
+            var value = unpack(rows, key); 
+            dataSize = value.length;
+            map.set(key, value);
+        }
+        console.log("map", map);    
+
+        //first time - put all data into traceMap as one trace with "all-data" as the key
+        traceMap = new Map();
+        traceMap.set("all-data", map);
+        keys.push("all-data");
+        console.log("orig traceMap", traceMap);
+        origMap = traceMap;
+        console.log("origMap", origMap);
+
+        //instantiate an array with the columnHeaders of numeric fields
+        var numFields =[];
+        for (var k=0; k<colHeaders.length; k++){
+            var array = map.get(colHeaders[k]);
+            console.log("array " + k, array );
+            if (!isNaN(array[0])){
+                numFields.push(colHeaders[k]);
+            }
+        }
+        console.log("numFields array", numFields);
+
+        //start the graph out with the first 3 numeric fields available
+        var xInit = numFields[0];
+        var yInit = numFields[1];
+        var zInit = numFields[2];
+
+        //set the radio buttons selected to fields for axes
+        var xBtns = document.getElementsByName("xaxis");
+        xBtns.forEach(function(x){
+            if (x.value == xInit){
+                x.checked =true;
+            }
         });
-    }
+        var yBtns = document.getElementsByName("yaxis");
+        yBtns.forEach(function(y){
+            if (y.value == yInit){
+                y.checked =true;
+            }
+        });
+        var zBtns = document.getElementsByName("zaxis");
+        zBtns.forEach(function(z){
+            if (z.value == zInit){
+                z.checked =true;
+            }
+        });
+        console.log("xBtns", xBtns);
 
-    //unpack all of the data into a map (using above-defined unpack function)
-    map = new Map();
-    for(var j=0; j<colHeaders.length; j++){
-        var key = colHeaders[j];
-        var value = unpack(rows, key); 
-        dataSize = value.length;
-        map.set(key, value);
-    }
-    console.log("map", map);    
+        //Put empty string as current hoverText to avoid 'undefined'
+        for (var i =0; i<dataSize; i++){
+            hoverText[i] = "";
+        } 
+        //get the hovertext (right now only works for first initial graph with one trace)
+        wHoverText = getHoverText();
 
-    //first time - put all data into traceMap as one trace with "all-data" as the key
-    traceMap = new Map();
-    traceMap.set("all-data", map);
-    keys.push("all-data");
-    console.log("orig traceMap", traceMap);
-    origMap = traceMap;
-    console.log("origMap", origMap);
+        //initial starting trace with all data in one trace
+        var trace1 = {
+            x: map.get(xInit), 
+            y: map.get(yInit),  
+            z: map.get(zInit),
+            name: 'all-data',
+            text:  [map.get('id'), map.get('names')],
+            textposition: 'top center',
+            mode: 'markers',
+            type: 'scatter3d',
+            hoverinfo: "text",
+            hovertext: wHoverText,
+            opacity: 0.4
+        };
+        var data = [trace1];
 
-    //instantiate an array with the columnHeaders of numeric fields
-    var numFields =[];
-    for (var k=0; k<colHeaders.length; k++){
-        var array = map.get(colHeaders[k]);
-        console.log("array " + k, array );
-        if (!isNaN(array[0])){
-            numFields.push(colHeaders[k]);
-        }
-    }
-    console.log("numFields array", numFields);
-
-    //start the graph out with the first 3 numeric fields available
-    var xInit = numFields[0];
-    var yInit = numFields[1];
-    var zInit = numFields[2];
-
-    //set the radio buttons selected to fields for axes
-    var xBtns = document.getElementsByName("xaxis");
-    xBtns.forEach(function(x){
-        if (x.value == xInit){
-            x.checked =true;
-        }
+        var layout = {
+            scene:{
+                xaxis:{title: xInit},
+                yaxis:{title: yInit},
+                zaxis:{title: zInit} 
+            },
+            autosize: false,
+            width: 600,
+            height: 600,
+            margin:{
+                l:10,
+                r:0,
+                b:20,
+                t:30
+            },
+            title: 'Enter Chart Title on Left'
+        };
+        Plotly.newPlot('graphDiv', data, layout);
     });
-    var yBtns = document.getElementsByName("yaxis");
-    yBtns.forEach(function(y){
-        if (y.value == yInit){
-            y.checked =true;
-        }
-    });
-    var zBtns = document.getElementsByName("zaxis");
-    zBtns.forEach(function(z){
-        if (z.value == zInit){
-            z.checked =true;
-        }
-    });
-    console.log("xBtns", xBtns);
-
-    //Put empty string as current hoverText to avoid 'undefined'
-    for (var i =0; i<dataSize; i++){
-        hoverText[i] = "";
-    } 
-    //get the hovertext (right now only works for first initial graph with one trace)
-    wHoverText = getHoverText();
-
-    //initial starting trace with all data in one trace
-    var trace1 = {
-        x: map.get(xInit), 
-        y: map.get(yInit),  
-        z: map.get(zInit),
-        name: 'all-data',
-        text:  [map.get('id'), map.get('names')],
-        textposition: 'top center',
-        mode: 'markers',
-        type: 'scatter3d',
-        hoverinfo: "text",
-        hovertext: wHoverText,
-        opacity: 0.4
-    };
-    var data = [trace1];
-
-    var layout = {
-        scene:{
-            xaxis:{title: xInit},
-            yaxis:{title: yInit},
-            zaxis:{title: zInit} 
-        },
-        autosize: false,
-        width: 600,
-        height: 600,
-        margin:{
-            l:10,
-            r:0,
-            b:20,
-            t:30
-        },
-        title: 'Enter Chart Title on Left'
-    };
-    Plotly.newPlot('graphDiv', data, layout);
-});
+}
 
 //document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
 
@@ -222,7 +240,32 @@ document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
 document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
 
-document.getElementById("resetFilterBtn").onclick=function(){onClickResetFilter()};
+//document.getElementById("resetFilterBtn").onclick=function(){onClickResetFilter()};
+
+document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
+
+document.getElementById("submitFile").onclick=function(){onClickFileGo()};
+
+function onClickFileGo(){
+    var theFile = document.getElementById("file-input").value;
+    console.log("theFile", theFile);
+    setUpMenus();
+    setUpGraph();
+}
+
+function onClickOpenFile(){
+    var fileInput = document.getElementById("file-input");
+    fileInput.click();
+    fileInput.addEventListener('change', showfileName);
+    console.log("open file clicked. fileInput: " , fileInput);
+
+    function showfileName(event){
+        var inputVal = event.srcElement;
+        var fileName = inputVal.files[0].name;
+        document.getElementById("fileName").innerHTML = fileName;
+        filename = fileName;
+    }
+}
 
 function getXAxisSelection(){
     var xBtns = document.getElementsByName("xaxis");
