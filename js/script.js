@@ -54,8 +54,8 @@ function setUpMenus(){
         //add -select- option to top of traceMenu
         var selectOpt = document.createElement("option");
         selectOpt.selected = true;
-        selectOpt.value="none";
-        selectOpt.innerHTML="-none-";
+        selectOpt.value="all-data";
+        selectOpt.innerHTML="none";
         traceMenu.appendChild(selectOpt);
 
         //clear out mdChoices array
@@ -378,31 +378,17 @@ function onClickTraceBtn(){
     }
 
     var checked= false;
-    //save the chosen field in traceChoice variable
 
+    //save the chosen field in traceChoice variable
     var trc = document.getElementById("trace-select");
     traceChoice = trc.options[trc.selectedIndex].value;
 
-    if (traceChoice != "none"){
+    if (traceChoice != "all-data"){
         checked = true;
     }
     console.log("traceChoice", traceChoice);
 
     console.log("ANYTHING SELECTED: " , checked);
-    //make an array of all the different values in that field
-    var allVals = map.get(traceChoice);
-    var uniqueVals =[];
-    console.log("allVals", allVals);
-    allVals.forEach(function(val){
-        if (!uniqueVals.includes(val)){
-            uniqueVals.push(val);
-        }
-    });
-    console.log("uniqueVals", uniqueVals);
-
-    //instantiate the new Map that will have each unique val as a key:
-    traceMap = new Map();
-    console.log("TRACEMAP-BEFORE", traceMap);
 
     if (!checked){
         traceMap = origMap;
@@ -410,6 +396,21 @@ function onClickTraceBtn(){
     }
 
     else{
+        //make an array of all the different values in that field
+        var allVals = map.get(traceChoice);
+        var uniqueVals =[];
+        console.log("allVals", allVals);
+        allVals.forEach(function(val){
+            if (!uniqueVals.includes(val)){
+                uniqueVals.push(val);
+            }
+        });
+        console.log("uniqueVals", uniqueVals);
+
+        //instantiate the new Map that will have each unique val as a key:
+        traceMap = new Map();
+        console.log("TRACEMAP-BEFORE", traceMap);
+
         //for each unique value (=each trace)
         var innerMap;
         uniqueVals.forEach(
@@ -453,8 +454,12 @@ function onClickTraceBtn(){
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
+    
+    var theKeys=[];
+    if (checked){ theKeys = uniqueVals;}
+    else {theKeys.push("all-data");} 
 
-    uniqueVals.forEach(function(val){
+    theKeys.forEach(function(val){
         console.log("xOption", xOption);
         console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
 
