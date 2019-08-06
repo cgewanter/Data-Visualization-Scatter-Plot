@@ -33,7 +33,7 @@ function setUpMenus(){
         });
         console.log("colHeaders", colHeaders);
 
-        var theHovDiv = document.getElementById("hoverList");
+        var theHovDiv = document.getElementById("checkboxList");
         var xMenu = document.getElementById("x-select");
         var yMenu = document.getElementById("y-select");
         var zMenu = document.getElementById("z-select");
@@ -55,21 +55,23 @@ function setUpMenus(){
         var selectOpt = document.createElement("option");
         selectOpt.selected = true;
         selectOpt.value="all-data";
-        selectOpt.innerHTML="none";
+        selectOpt.innerHTML="-none-";
         traceMenu.appendChild(selectOpt);
 
         //clear out mdChoices array
         mdChoices =[];
 
         for(var i=0; i<colHeaders.length; i++){
+
             //for hover options checkboxes:
             var checkBox = document.createElement("input");
             var label = document.createElement("label");
             checkBox.type = "checkbox";
             checkBox.value=colHeaders[i];
-            theHovDiv.appendChild(checkBox);
+            label.appendChild(checkBox);
+            label.innerHTML = colHeaders[i];
             theHovDiv.appendChild(label);
-            label.appendChild(document.createTextNode(colHeaders[i]));  
+            //label.appendChild(document.createTextNode(colHeaders[i]));  
 
             //for x-, y- and z-axis options
             var xSelect = document.createElement("option");
@@ -152,14 +154,12 @@ function setUpGraph(){
                 xOpts[i].selected =true;
             }
         }
-
         var yOpts = document.getElementById("y-select").children;
         for(var j=0; j<yOpts.length; j++){
             if (yOpts[j].value == yInit){
                 yOpts[j].selected =true;
             }
         }
-
         var zOpts = document.getElementById("z-select").children;
         for(var k=0; k<zOpts.length; k++){
             if(zOpts[k].value== zInit){
@@ -220,8 +220,6 @@ document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 
 document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
-
-//document.getElementById("resetFilterBtn").onclick=function(){onClickResetFilter()};
 
 document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
@@ -454,7 +452,7 @@ function onClickTraceBtn(){
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
-    
+
     var theKeys=[];
     if (checked){ theKeys = uniqueVals;}
     else {theKeys.push("all-data");} 
@@ -549,16 +547,14 @@ function onClickTitleBtn(){
     Plotly.relayout("graphDiv", update);
 }
 
-function onClickResetFilter(){
-
-    //go through all the buttons and unselect
-    var trcBtns = document.getElementsByName("colortrace");
-    console.log("about to deselect everything");
-    trcBtns.forEach(function(t){
-        t.checked=false;
-    });
-
-    onClickTraceBtn();
+function showHoverCheckboxes(){
+    var checkboxes = document.getElementById("checkboxList");
+    if (checkboxes.style.display!="none"){
+        checkboxes.style.display = "block";
+    }
+    else{
+        checkboxes.style.display ="none";
+    }
 }
 
 /* eslint-enable no-alert, no-console */

@@ -29,12 +29,27 @@
                 <button id="titleBtn" class="button">Apply</button>
             </div>
 
-            <div id="listDiv" class="menuouterbox">
-                <p class= "menutitle">Choose which data to show on mouse hover:</p>
-                <ul id="hoverList"></ul>
-                <button id="hoverBtn" class="button">Apply</button>
-            </div>
-
+            <form>
+                
+                <div id="listDiv" class="menuouterbox">
+                    
+                    <div class="selectbox" onclick="showHoverCheckboxes()">
+                        <select>
+                            <option>Select an option</option>
+                        </select>
+                    </div>
+                    
+                    <div id=checkboxesDiv>
+                        <ul id= checkboxList>
+                            <label><input type="checkbox" id="all"/>All</label>
+                            <label><input type="checkbox" id="none"/>None</label>
+                        </ul>
+                    </div>
+                    <button id="hoverBtn" class="button">Apply</button>
+                </div>
+                
+            </form>
+            
             <div id="menuContainer" class ="menuouterbox">
 
                 <div id="dataXDiv" class="menubox">
