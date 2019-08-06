@@ -37,7 +37,7 @@ function setUpMenus(){
         var xMenu = document.getElementById("x-select");
         var yMenu = document.getElementById("y-select");
         var zMenu = document.getElementById("z-select");
-        var traceDiv = document.getElementById("traceList");
+        var traceMenu = document.getElementById("trace-select");
 
         function clearDiv(div){
             //clear out the theHovDiv
@@ -46,10 +46,20 @@ function setUpMenus(){
             }
         }
         //clear out all the divs from any previous data
-        var divArray = [theHovDiv, xMenu, yMenu, zMenu, traceDiv];
+        var divArray = [theHovDiv, xMenu, yMenu, zMenu, traceMenu];
         divArray.forEach(function(div){
             clearDiv(div);
         });
+
+        //add -select- option to top of traceMenu
+        var selectOpt = document.createElement("option");
+        selectOpt.selected = true;
+        selectOpt.value="none";
+        selectOpt.innerHTML="-none-";
+        traceMenu.appendChild(selectOpt);
+
+        //clear out mdChoices array
+        mdChoices =[];
 
         for(var i=0; i<colHeaders.length; i++){
             //for hover options checkboxes:
@@ -66,7 +76,6 @@ function setUpMenus(){
             xSelect.value= colHeaders[i];
             xSelect.innerHTML = colHeaders[i];
             xMenu.appendChild(xSelect);
-            console.log("xSelect", xSelect);
 
             var ySelect = document.createElement("option");
             ySelect.value=colHeaders[i];
@@ -79,17 +88,12 @@ function setUpMenus(){
             zMenu.appendChild(zSelect);
 
             //color-filter traces menu
-            var cRadio = document.createElement("input");
-            var cLabel = document.createElement("label");
-            cRadio.type = "radio";
-            cRadio.value = colHeaders[i];
-            cRadio.name = "colortrace";
-            traceDiv.appendChild(cRadio);
-            traceDiv.appendChild(cLabel);
-            traceDiv.appendChild(document.createTextNode(colHeaders[i]));
+            var traceOpt = document.createElement("option");
+            traceOpt.value = colHeaders[i];
+            traceOpt.innerHTML = colHeaders[i];
+            traceMenu.appendChild(traceOpt);
         }
-        var xs = document.getElementsByName("xoption");
-        console.log("XS by Element Name: " ,xs);
+
     });  //end setting up menu method
 }
 //           *   *   *   *   *   *
@@ -128,7 +132,7 @@ function setUpGraph(){
         var numFields =[];
         for (var k=0; k<colHeaders.length; k++){
             var array = map.get(colHeaders[k]);
-            console.log("array " + k, array );
+            //console.log("array " + k, array );
             if (!isNaN(array[0])){
                 numFields.push(colHeaders[k]);
             }
@@ -307,9 +311,9 @@ function onClickXYZ(){
     Plotly.addTraces("graphDiv", newTraces);
 
     var layoutUpdate ={
-        'scene.xaxis.title': xOption.value,
-        'scene.yaxis.title': yOption.value,
-        'scene.zaxis.title': zOption.value
+        'scene.xaxis.title': xOption,
+        'scene.yaxis.title': yOption,
+        'scene.zaxis.title': zOption
     }; 
     Plotly.relayout("graphDiv", layoutUpdate);
 }
@@ -361,21 +365,6 @@ function onClickHover(){
     console.log("delArray", delArray);
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", newTraces);
-
-
-    /*var counter =0;
-    traceMap.forEach(function(value, key, map){
-        console.log("in foreach, hoverText for " + key, hoverText.get(key));
-        var update = {
-            hovertext: hoverText.get(key)
-        }
-        console.log("current key", key);
-        console.log("counter rt before restyle: " , counter);
-        console.log("hoverText.get(key)", hoverText.get(key));
-        console.log("update: for " + key , update);
-        Plotly.restyle("graphDiv", update, counter);
-        counter++;
-    });*/
 }
 
 function onClickTraceBtn(){
@@ -390,14 +379,15 @@ function onClickTraceBtn(){
 
     var checked= false;
     //save the chosen field in traceChoice variable
-    var trcBtns = document.getElementsByName("colortrace");
-    trcBtns.forEach(function(t){
-        if(t.checked){
-            traceChoice = t.value;
-            checked =true;
-            console.log("traceChoice", traceChoice);
-        }
-    });
+
+    var trc = document.getElementById("trace-select");
+    traceChoice = trc.options[trc.selectedIndex].value;
+
+    if (traceChoice != "none"){
+        checked = true;
+    }
+    console.log("traceChoice", traceChoice);
+
     console.log("ANYTHING SELECTED: " , checked);
     //make an array of all the different values in that field
     var allVals = map.get(traceChoice);
@@ -504,10 +494,10 @@ function getHoverText(){
         console.log("map: ", map);
 
         htArray = getInnerHovText(key);
-        console.log("htArray for " +key, htArray);
+        //console.log("htArray for " +key, htArray);
         wHoverText.set(key, htArray);
     });
-    console.log("wHoverText", wHoverText);
+    //console.log("wHoverText", wHoverText);
     return wHoverText;
 }
 
@@ -523,7 +513,7 @@ function getInnerHovText(key){
     for (var i =0; i<innerMap.get(colHeaders[0]).length; i++){
         innerHover[i] ="";
     } 
-    console.log("innerHover after populate with blank strings", innerHover);
+    //console.log("innerHover after populate with blank strings", innerHover);
 
     //outer and inner loop to populate the hovertext
     //outer: goes through each data point
@@ -538,7 +528,7 @@ function getInnerHovText(key){
             innerHover[m] += header + ": " + array[m] +  '<br>';
         }
     }
-    console.log("innerHover for " + key, innerHover);
+    //console.log("innerHover for " + key, innerHover);
 
     //console.log("hoverText in method", hoverText);
     return innerHover;

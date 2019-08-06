@@ -31,7 +31,6 @@
 
             <div id="listDiv" class="menuouterbox">
                 <p class= "menutitle">Choose which data to show on mouse hover:</p>
-
                 <ul id="hoverList"></ul>
                 <button id="hoverBtn" class="button">Apply</button>
             </div>
@@ -58,24 +57,29 @@
 
                 </div>
                 <div id="dataZDiv" class="menubox">
-                   <fieldset id ="z-fieldset">
+                    <fieldset id ="z-fieldset">
                         <legend>Z-Axis Field</legend>
                         <select id="z-select">
                             <option selected disabled value="select">-select-</option>
                         </select>
                     </fieldset>
                 </div>
-                
+
                 <br/>
                 <button id="xyzBtn" class= "button">Apply</button>
-                
+
             </div>
 
             <div id="traceBox" class="menuouterbox">
-                <p class= "menutitle">Filter points by color by: </p>
+                <fieldset id="trace-fieldset">
+                    <legend>Filter points by color by: </legend>
+                    <select id="trace-select">
+                        <option selected disabled value="select">-select-</option>
+                    </select>
+                    <br/><br/>
+                    <button id= "traceBtn" class="button">Apply</button>
 
-                <ul id="traceList"></ul>
-                <button id= "traceBtn" class="button">Apply</button>
+                </fieldset>
                 <!--                <button id= "resetFilterBtn" class="button">Reset (No filter)</button>-->
             </div>
         </div>
