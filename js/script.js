@@ -216,7 +216,7 @@ function setUpGraph(){
                 zaxis:{title: zInit} 
             },
             autosize: false,
-            width: 600,
+            width: 700,
             height: 600,
             margin:{
                 l:10,
@@ -355,7 +355,7 @@ function onClickXYZ(){
 function onClickHover(){
     //clear out the mdChoices array so can start over from what is checked now
     mdChoices =[];
-    var mdList = document.getElementById("list");
+    var mdList = document.getElementById("hoverList");
     var options = mdList.children;
     for(var i =0; i<options.length; i++){
         if (options[i].checked){
@@ -603,6 +603,5 @@ function onClickResetFilter(){
 
     onClickTraceBtn();
 }
-
 
 /* eslint-enable no-alert, no-console */
