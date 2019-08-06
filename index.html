@@ -39,19 +39,36 @@
             <div id="menuContainer" class ="menuouterbox">
 
                 <div id="dataXDiv" class="menubox">
-                    <p class= "menutitle">X-axis field:</p>
-                    <ul id="dataXList"></ul>
+
+                    <fieldset id= "x-fieldset">
+                        <legend>X-Axis Field</legend>
+                        <select id="x-select">
+                            <option selected disabled value ="select">-select-</option>
+                        </select>
+                    </fieldset>
+
                 </div>
                 <div id="dataYDiv" class="menubox">
-                    <p class= "menutitle">Y-axis field:</p>
-                    <ul id="dataYList"></ul>
+                    <fieldset id ="y-fieldset">
+                        <legend>Y-Axis Field</legend>
+                        <select id="y-select">
+                            <option selected disabled value="select">-select-</option>
+                        </select>
+                    </fieldset>
+
                 </div>
                 <div id="dataZDiv" class="menubox">
-                    <p class= "menutitle">Z-axis field:</p>
-                    <ul id="dataZList"></ul>
+                   <fieldset id ="z-fieldset">
+                        <legend>Z-Axis Field</legend>
+                        <select id="z-select">
+                            <option selected disabled value="select">-select-</option>
+                        </select>
+                    </fieldset>
                 </div>
+                
                 <br/>
                 <button id="xyzBtn" class= "button">Apply</button>
+                
             </div>
 
             <div id="traceBox" class="menuouterbox">

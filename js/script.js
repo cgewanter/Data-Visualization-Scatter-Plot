@@ -33,26 +33,26 @@ function setUpMenus(){
         });
         console.log("colHeaders", colHeaders);
 
+        var theHovDiv = document.getElementById("hoverList");
+        var xMenu = document.getElementById("x-select");
+        var yMenu = document.getElementById("y-select");
+        var zMenu = document.getElementById("z-select");
+        var traceDiv = document.getElementById("traceList");
+
         function clearDiv(div){
             //clear out the theHovDiv
             while(div.firstChild){
                 div.removeChild(div.firstChild);
             }
         }
-
-        var theHovDiv = document.getElementById("hoverList");
-        var xMenuDiv = document.getElementById("dataXList");
-        var yMenuDiv = document.getElementById("dataYList");
-        var zMenuDiv = document.getElementById("dataZList");
-        var traceDiv = document.getElementById("traceList");
-
-        var divArray = [theHovDiv, xMenuDiv, yMenuDiv, zMenuDiv, traceDiv];
+        //clear out all the divs from any previous data
+        var divArray = [theHovDiv, xMenu, yMenu, zMenu, traceDiv];
         divArray.forEach(function(div){
             clearDiv(div);
         });
 
         for(var i=0; i<colHeaders.length; i++){
-            //for hover checkboxes options
+            //for hover options checkboxes:
             var checkBox = document.createElement("input");
             var label = document.createElement("label");
             checkBox.type = "checkbox";
@@ -61,50 +61,23 @@ function setUpMenus(){
             theHovDiv.appendChild(label);
             label.appendChild(document.createTextNode(colHeaders[i]));  
 
-            //for x, y, z data choices boxes:
-            //filter out colHeaders[] to an array of the numeric options:
-            //var numOptions = [];
-            /*for (var i=0; i<colHeaders.length; i++){
-            if (colHeaders[i])
-        }*/
-            var xItem = document.createElement("li");
-            var xRadio = document.createElement("input");
-            var xLabel = document.createElement("label");
-            //var newLine = document.createElement()
-            xRadio.type = "radio";
-            xRadio.value= colHeaders[i];
-            xRadio.name = "xaxis";
-            xItem.appendChild(xRadio);
-            xItem.appendChild(xLabel);
-            xItem.style.listStyle="none";
-            xLabel.appendChild(document.createTextNode(colHeaders[i]));
-            xMenuDiv.appendChild(xItem);
+            //for x-, y- and z-axis options
+            var xSelect = document.createElement("option");
+            xSelect.value= colHeaders[i];
+            xSelect.innerHTML = colHeaders[i];
+            xMenu.appendChild(xSelect);
 
-            var yItem = document.createElement("li");
-            var yRadio = document.createElement("input");
-            var yLabel = document.createElement("label");
-            yRadio.type = "radio";
-            yRadio.value= colHeaders[i];
-            yRadio.name = "yaxis";
-            yItem.appendChild(yRadio);
-            yItem.appendChild(yLabel);
-            yItem.style.listStyle="none";
-            yLabel.appendChild(document.createTextNode(colHeaders[i]));
-            yMenuDiv.appendChild(yItem);
+            var ySelect = document.createElement("option");
+            ySelect.value=colHeaders[i];
+            ySelect.innerHTML = colHeaders[i];
+            yMenu.appendChild(ySelect);
 
-            var zItem = document.createElement("li");
-            var zRadio = document.createElement("input");
-            var zLabel = document.createElement("label");
-            zRadio.type = "radio";
-            zRadio.value= colHeaders[i];
-            zRadio.name ="zaxis";
-            zItem.appendChild(zRadio);
-            zItem.appendChild(zLabel);
-            zItem.style.listStyle="none";
-            zLabel.appendChild(document.createTextNode(colHeaders[i]));
-            zMenuDiv.appendChild(zItem);
+            var zSelect = document.createElement("option");
+            zSelect.value=colHeaders[i];
+            zSelect.innerHTML = colHeaders[i];
+            zMenu.appendChild(zSelect);
 
-            //color-code traces menu
+            //color-filter traces menu
             var cRadio = document.createElement("input");
             var cLabel = document.createElement("label");
             cRadio.type = "radio";
@@ -253,7 +226,7 @@ function onClickFileGo(){
     setUpGraph();
     var menus = document.getElementsByClassName("menuouterbox");
     console.log("Menus: " , menus);
-    
+
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
         console.log("menus[i]", menus[i]);
@@ -275,34 +248,19 @@ function onClickOpenFile(){
 }
 
 function getXAxisSelection(){
-    var xBtns = document.getElementsByName("xaxis");
-    xBtns.forEach(function(x){
-        if (x.checked){
-            xOption = x;
-            console.log("x:",xOption.value);
-            //console.log(map.get(xOption.value));
-        }
-    });
+
+    var x = document.getElementById("x-select");
+    xOption = x.options[x.selectedIndex].value;
     return xOption;
 }
 function getYAxisSelection(){
-    var yBtns = document.getElementsByName("yaxis");
-    yBtns.forEach(function(y){
-        if (y.checked){
-            yOption = y;
-            console.log("y:", yOption.value);
-        }
-    });
+    var z = document.getElementById("y-select");
+    yOption = z.options[z.selectedIndex].value;
     return yOption;
 }
 function getZAxisSelection(){
-    var zBtns = document.getElementsByName("zaxis");
-    zBtns.forEach(function(z){
-        if (z.checked){
-            zOption =z;
-            console.log("z:", zOption.value);
-        }
-    });
+    var z = document.getElementById("z-select");
+    zOption = z.options[z.selectedIndex].value;
     return zOption;
 }
 
@@ -318,11 +276,11 @@ function onClickXYZ(){
 
     var newTraces =[];
     traceMap.forEach(function(value, key, map){
-        console.log("try:" , traceMap.get(key).get(xOption.value));
+        console.log("try:" , traceMap.get(key).get(xOption));
         var theTrace ={
-            x: traceMap.get(key).get(xOption.value),
-            y: traceMap.get(key).get(yOption.value),
-            z: traceMap.get(key).get(zOption.value),
+            x: traceMap.get(key).get(xOption),
+            y: traceMap.get(key).get(yOption),
+            z: traceMap.get(key).get(zOption),
             name: key,
             mode: 'markers',
             type: 'scatter3d',
@@ -376,9 +334,9 @@ function onClickHover(){
     var newTraces =[];
     traceMap.forEach(function(value, key, map){
         var theTrace ={
-            x: traceMap.get(key).get(xOption.value),
-            y: traceMap.get(key).get(yOption.value),
-            z: traceMap.get(key).get(zOption.value),
+            x: traceMap.get(key).get(xOption),
+            y: traceMap.get(key).get(yOption),
+            z: traceMap.get(key).get(zOption),
             name: key,
             mode: 'markers',
             type: 'scatter3d',
@@ -507,9 +465,9 @@ function onClickTraceBtn(){
         console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
 
         theTrace = {
-            x: traceMap.get(val).get(xOption.value),
-            y: traceMap.get(val).get(yOption.value),
-            z: traceMap.get(val).get(zOption.value),
+            x: traceMap.get(val).get(xOption),
+            y: traceMap.get(val).get(yOption),
+            z: traceMap.get(val).get(zOption),
             name: val,
             text:  [traceMap.get(val), map.get('names')],
             textposition: 'top center',
