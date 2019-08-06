@@ -66,6 +66,7 @@ function setUpMenus(){
             xSelect.value= colHeaders[i];
             xSelect.innerHTML = colHeaders[i];
             xMenu.appendChild(xSelect);
+            console.log("xSelect", xSelect);
 
             var ySelect = document.createElement("option");
             ySelect.value=colHeaders[i];
@@ -85,8 +86,10 @@ function setUpMenus(){
             cRadio.name = "colortrace";
             traceDiv.appendChild(cRadio);
             traceDiv.appendChild(cLabel);
-            traceDiv.appendChild(document.createTextNode(colHeaders[i]));     
+            traceDiv.appendChild(document.createTextNode(colHeaders[i]));
         }
+        var xs = document.getElementsByName("xoption");
+        console.log("XS by Element Name: " ,xs);
     });  //end setting up menu method
 }
 //           *   *   *   *   *   *
@@ -103,7 +106,6 @@ function setUpGraph(){
                 return row[key];
             });
         }
-
         //unpack all of the data into a map (using above-defined unpack function)
         map = new Map();
         for(var j=0; j<colHeaders.length; j++){
@@ -138,26 +140,28 @@ function setUpGraph(){
         var yInit = numFields[1];
         var zInit = numFields[2];
 
-        //set the radio buttons selected to fields for axes
-        var xBtns = document.getElementsByName("xaxis");
-        xBtns.forEach(function(x){
-            if (x.value == xInit){
-                x.checked =true;
+        //set the right options selected in axes dropdowns
+        var xOpts = document.getElementById("x-select").children;
+        console.log("xOpts", xOpts);
+        for(var i=0; i<xOpts.length; i++){
+            if(xOpts[i].value == xInit){
+                xOpts[i].selected =true;
             }
-        });
-        var yBtns = document.getElementsByName("yaxis");
-        yBtns.forEach(function(y){
-            if (y.value == yInit){
-                y.checked =true;
+        }
+
+        var yOpts = document.getElementById("y-select").children;
+        for(var j=0; j<yOpts.length; j++){
+            if (yOpts[j].value == yInit){
+                yOpts[j].selected =true;
             }
-        });
-        var zBtns = document.getElementsByName("zaxis");
-        zBtns.forEach(function(z){
-            if (z.value == zInit){
-                z.checked =true;
+        }
+
+        var zOpts = document.getElementById("z-select").children;
+        for(var k=0; k<zOpts.length; k++){
+            if(zOpts[k].value== zInit){
+                zOpts[k].selected=true;
             }
-        });
-        console.log("xBtns", xBtns);
+        }
 
         //Put empty string as current hoverText to avoid 'undefined'
         for (var i =0; i<dataSize; i++){

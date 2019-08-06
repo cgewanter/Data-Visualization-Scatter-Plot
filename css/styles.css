@@ -129,11 +129,7 @@ font-size:20pt
 
 .menubox{
     float: left;
-    border-radius: 25px;
-    border: dotted black;
-    border-width:thin;
     text-align: left;
-    padding: 10px;
     color:black;
     font-family: "Calibri";
     font-size: 14pt;
