@@ -548,14 +548,5 @@ function onClickTitleBtn(){
     Plotly.relayout("graphDiv", update);
 }
 
-function showHoverCheckboxes(){
-    var checkboxes = document.getElementById("checkboxList");
-    if (checkboxes.style.display!="none"){
-        checkboxes.style.display = "block";
-    }
-    else{
-        checkboxes.style.display ="none";
-    }
-}
 
 /* eslint-enable no-alert, no-console */

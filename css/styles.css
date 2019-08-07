@@ -94,6 +94,19 @@ font-family: "Agency FB";
 font-size:20pt
 }*/
 
+.select{
+    border-radius: 5px;
+    font-size: 12pt;
+    font-family: "Calibri";
+}
+
+fieldset{
+    border-radius: 10px;
+    border-color: lightgray;
+    padding: 10pt;
+    padding-bottom: 15pt;
+}
+
 #menuContainer{
     float: left;
     width: auto;
@@ -127,32 +140,25 @@ font-size:20pt
     padding: 4pt
 }
 
-#checkboxList{
-    display:none;
-    border: 1px black solid;
+#hovWrapper {
+    width: 200px;
+    height: 300px;
 }
 
-#checkboxList label{
-    display: block;
+#hovListDiv {
+    height: 150px; 
+    width: 195px;
+    overflow: auto;
+    border: 1pt solid lightgray;
+    border-radius: 5px;
+    margin-bottom: 5pt;
+    margin-left: 2pt;
 }
 
-#checkboxList label:hover{
-    background-color: lightgray;
+#hoverlist{
+    text-align: left;
 }
 
-.selectbox {
-    position: relative;
-}
-
-.selectbox select{
-    width: 100%;
-    font-weight: bold;
-}
-
-.overSelect{
-    position: absolute;
-    left:0; right:0; top:0; bottom:0;
-}
 
 .menubox{
     float: left;
@@ -161,6 +167,8 @@ font-size:20pt
     font-family: "Calibri";
     font-size: 14pt;
     margin: 5pt;
+    margin-top: 8pt;
+    margin-bottom: 8pt;
     width: auto;
     height: auto;
 }
@@ -186,22 +194,5 @@ font-size:20pt
     display: none !important;
 }
 
-#hovWrapper {
-    width: 200px;
-    height: 300px;
-}
-
-#hovListDiv {
-    height: 150px; 
-    width: 195px;
-    overflow: auto;
-    border: 1pt solid lightgray;
-    border-radius: 5px;
-    margin-bottom: 5pt;
-}
-
-#hoverlist{
-    text-align: left;
-}
 
 
