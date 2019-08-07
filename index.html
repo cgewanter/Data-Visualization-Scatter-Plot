@@ -11,8 +11,8 @@
     <body>
 
         <div id= "openFileBox" class= "menuouterbox">
-            <p class=menutitle>Choose a File</p>
-            <p>Choose the file to use as a data source for the graph:</p>
+            <p class="menutitle">Choose a File</p>
+            <p class="subtext">Choose the file to use as a data source for the graph:</p>
             <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
             <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
             <span id="fileNameSpan">&nbsp [No file selected]</span>
@@ -30,26 +30,26 @@
             </div>
 
             <form>
-                
-                <div id="listDiv" class="menuouterbox">
-                    
-                    <div class="selectbox" onclick="showHoverCheckboxes()">
-                        <select>
-                            <option>Select an option</option>
-                        </select>
-                    </div>
-                    
-                    <div id=checkboxesDiv>
-                        <ul id= checkboxList>
-                            <label><input type="checkbox" id="all"/>All</label>
-                            <label><input type="checkbox" id="none"/>None</label>
-                        </ul>
-                    </div>
-                    <button id="hoverBtn" class="button">Apply</button>
-                </div>
-                
+
+                <!--<div id="listDiv" class="menuouterbox">
+
+<div class="selectbox" onclick="showHoverCheckboxes()">
+<select>
+<option>Select an option</option>
+</select>
+</div>
+
+<div id=checkboxesDiv>
+<ul id= checkboxList>
+<label><input type="checkbox" id="all"/>All</label>
+<label><input type="checkbox" id="none"/>None</label>
+</ul>
+</div>
+<button id="hoverBtn" class="button">Apply</button>
+</div>
+-->
             </form>
-            
+
             <div id="menuContainer" class ="menuouterbox">
 
                 <div id="dataXDiv" class="menubox">
@@ -97,6 +97,17 @@
                 </fieldset>
                 <!--                <button id= "resetFilterBtn" class="button">Reset (No filter)</button>-->
             </div>
+
+            <div id="hovWrapper" class=menuouterbox>
+                <p class=menutitle>Hover Text</p>
+                <p class="subtext">Choose which fields to show on mouse hover:</p>
+                <div id="hovListDiv">
+                    
+                    <ul id="hoverlist"></ul>
+                </div>
+                <button id="hoverBtn" class="button">Apply</button>
+            </div>
+
         </div>
         <!--    <button id="applyAll" class= "button">Apply all</button>-->
         <br/>

@@ -11,7 +11,7 @@ body{
 }
 
 #fileOpenBtn{
-   float:left; 
+    float:left; 
 }
 
 #goFileBtn{
@@ -32,6 +32,7 @@ body{
     float:right;
     width: 30%;  
     margin-top: 10pt;
+    margin-right: 40pt;
 }
 
 
@@ -39,8 +40,8 @@ body{
     margin-left: 10px;
 }
 
-#theP {
-    color: red;
+.subtext{
+    font-size: 13pt;
 }
 
 
@@ -181,7 +182,26 @@ font-size:20pt
     display:none;
 }
 
-
 .modebar{
     display: none !important;
 }
+
+#hovWrapper {
+    width: 200px;
+    height: 300px;
+}
+
+#hovListDiv {
+    height: 150px; 
+    width: 195px;
+    overflow: auto;
+    border: 1pt solid lightgray;
+    border-radius: 5px;
+    margin-bottom: 5pt;
+}
+
+#hoverlist{
+    text-align: left;
+}
+
+

@@ -33,7 +33,7 @@ function setUpMenus(){
         });
         console.log("colHeaders", colHeaders);
 
-        var theHovDiv = document.getElementById("checkboxList");
+        var theHovDiv = document.getElementById("hoverlist");
         var xMenu = document.getElementById("x-select");
         var yMenu = document.getElementById("y-select");
         var zMenu = document.getElementById("z-select");
@@ -68,10 +68,11 @@ function setUpMenus(){
             var label = document.createElement("label");
             checkBox.type = "checkbox";
             checkBox.value=colHeaders[i];
-            label.appendChild(checkBox);
-            label.innerHTML = colHeaders[i];
+            theHovDiv.appendChild(checkBox);
             theHovDiv.appendChild(label);
-            //label.appendChild(document.createTextNode(colHeaders[i]));  
+            theHovDiv.appendChild(label);
+            label.appendChild(document.createTextNode(colHeaders[i]));
+            theHovDiv.appendChild(document.createElement("br"));
 
             //for x-, y- and z-axis options
             var xSelect = document.createElement("option");
@@ -319,7 +320,7 @@ function onClickXYZ(){
 function onClickHover(){
     //clear out the mdChoices array so can start over from what is checked now
     mdChoices =[];
-    var mdList = document.getElementById("hoverList");
+    var mdList = document.getElementById("hoverlist");
     var options = mdList.children;
     for(var i =0; i<options.length; i++){
         if (options[i].checked){
