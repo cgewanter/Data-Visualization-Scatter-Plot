@@ -101,6 +101,7 @@ font-size:20pt
 }
 
 fieldset{
+    text-align: center;
     border-radius: 10px;
     border-color: lightgray;
     padding: 10pt;
@@ -109,13 +110,15 @@ fieldset{
 
 #menuContainer{
     float: left;
+    height: 135px;;
     width: auto;
+    max-width: 500px;
+    overflow: auto; 
     border: 2px solid turquoise;
     border-radius: 25px;
     border-width:medium;
     text-align: center;
     vertical-align:middle;
-    height: auto;
     margin: 10pt;
     padding: 10px;
 }
