@@ -10,17 +10,19 @@
 
     <body>
 
-        <div id= "openFileBox" class= "menuouterbox">
-            <p class="menutitle">Choose a File</p>
-            <p class="subtext">Choose the file to use as a data source for the graph:</p>
-            <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
-            <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
-            <span id="fileNameSpan">&nbsp [No file selected]</span>
-            <button id="goFileBtn" class="button">Go</button>
-        </div>
+
         <div id="graphDiv" class="graph"></div>
 
         <div id="allMenuContainer">
+
+            <div id= "openFileBox" class= "menuouterbox">
+                <p class="menutitle">Choose a File</p>
+                <p class="subtext">Choose the file to use as a data source for the graph:</p>
+                <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
+                <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
+                <span id="fileNameSpan"> &nbsp[No file selected]</span>
+                <button id="goFileBtn" class="button">Go</button>
+            </div>
 
             <div id="titlebox" class="menuouterbox">
                 <p class= "menutitle">Enter Chart Title:</p>

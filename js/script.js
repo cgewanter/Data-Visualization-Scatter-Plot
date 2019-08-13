@@ -21,6 +21,30 @@ var origMap;
 var keys = [];
 var prevSize;
 
+function onClickFileGo(){
+    var theFile = document.getElementById("file-input").value;
+    console.log("theFile", theFile);
+    setUpMenus();
+    setUpGraph();
+    var menus = document.getElementsByClassName("menuouterbox");
+    for(var i=0; i< menus.length; i++){
+        menus[i].style.display="inline-block";
+    }
+}
+
+function onClickOpenFile(){
+    var fileInput = document.getElementById("file-input");
+    fileInput.click();
+    fileInput.addEventListener('change', showfileName);
+    console.log("open file clicked. fileInput: " , fileInput);
+
+    function showfileName(event){
+        var inputVal = event.srcElement;
+        var fileName = inputVal.files[0].name;
+        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + fileName;
+        filename = fileName;
+    }
+}
 
 function setUpMenus(){
     //Set up hover checklist and x, y, z axes menu, and trace menu
@@ -129,7 +153,7 @@ function setUpGraph(){
         keys.push("all-data");
         console.log("orig traceMap", traceMap);
         origMap = traceMap;
-        console.log("origMap", origMap);
+        console.log("origMap/traceMap", origMap);
 
         //instantiate an array with the columnHeaders of numeric fields
         var numFields =[];
@@ -172,8 +196,9 @@ function setUpGraph(){
         for (var i =0; i<dataSize; i++){
             hoverText[i] = "";
         } 
-        //get the hovertext (right now only works for first initial graph with one trace)
+        //get the hovertext (right now only works for first initial graph with one trace
         wHoverText = getHoverText();
+        console.log("wHoverText", wHovertext);
 
         //initial starting trace with all data in one trace
         var trace1 = {
@@ -181,21 +206,22 @@ function setUpGraph(){
             y: map.get(yInit),  
             z: map.get(zInit),
             name: 'all-data',
-            text:  [map.get('id'), map.get('names')],
-            textposition: 'top center',
             mode: 'markers',
             type: 'scatter3d',
             hoverinfo: "text",
             hovertext: wHoverText,
+            textposition: "top",
             opacity: 0.4
         };
         var data = [trace1];
 
         var layout = {
             scene:{
+                annotations:[],
                 xaxis:{title: xInit},
                 yaxis:{title: yInit},
-                zaxis:{title: zInit} 
+                zaxis:{title: zInit}
+
             },
             autosize: false,
             width: 700,
@@ -206,9 +232,58 @@ function setUpGraph(){
                 b:20,
                 t:30
             },
-            title: 'Enter Chart Title on Left'
+            title: 'Enter Chart Title on Left',
+
         };
         Plotly.newPlot('graphDiv', data, layout);
+
+        var theGraphDiv = document.getElementById("graphDiv");
+
+        var annots = theGraphDiv.layout.scene.annotations || [];
+        console.log("annots", annots);
+
+        //the onClick function for annotations
+        theGraphDiv.on("plotly_click", function(data){
+            console.log("CLICKED");
+
+            //set a timeout to circumvent recursive action bug with select in scatter3d
+            setTimeout(anotFunc, 100);
+            function anotFunc(){
+                console.log("anots onclick", annots);
+                console.log("data.points", data.points);
+                for(var i=0; i<data.points.length; i++){
+                    anotText = data.points[i].hovertext;
+                    console.log("anotText", anotText);
+                    var ptColor = data.points[i].fullData.marker.color;
+                    var textColor = getColorByBgColor(ptColor);
+
+                    function getColorByBgColor(bgColor) {
+                        if (!bgColor) { return ''; }
+                        return (parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2) ? '#000' : '#fff';
+                    }
+
+                    var annotation = {
+                        text: anotText,
+                        textangle: 0,
+                        bgcolor: "white",
+                        bordercolor: ptColor,
+                        borderwidth: 2,
+                        arrowcolor: ptColor,
+                        x: data.points[i].x,
+                        y: data.points[i].y,
+                        z: data.points[i].z,
+                        ax: 0,
+                        ay: -50
+                    }
+                    //var annots = theGraphDiv.layout.scene.annotations || [];
+                    annots.push(annotation);
+
+                    console.log("layout", theGraphDiv.layout);
+                    console.log("annots after push", annots);
+                    Plotly.relayout("graphDiv", {annotations: annots});
+                }
+            }
+        });
     });
 }
 
@@ -226,33 +301,6 @@ document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
 document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
 
-function onClickFileGo(){
-    var theFile = document.getElementById("file-input").value;
-    console.log("theFile", theFile);
-    setUpMenus();
-    setUpGraph();
-    var menus = document.getElementsByClassName("menuouterbox");
-    console.log("Menus: " , menus);
-
-    for(var i=0; i< menus.length; i++){
-        menus[i].style.display="inline-block";
-        console.log("menus[i]", menus[i]);
-    }
-}
-
-function onClickOpenFile(){
-    var fileInput = document.getElementById("file-input");
-    fileInput.click();
-    fileInput.addEventListener('change', showfileName);
-    console.log("open file clicked. fileInput: " , fileInput);
-
-    function showfileName(event){
-        var inputVal = event.srcElement;
-        var fileName = inputVal.files[0].name;
-        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + fileName;
-        filename = fileName;
-    }
-}
 
 function getXAxisSelection(){
 
@@ -548,5 +596,33 @@ function onClickTitleBtn(){
     Plotly.relayout("graphDiv", update);
 }
 
+
+/*annotations:[{
+                    x: 1,
+                    y: 8,
+                    z: 5,
+                    visible: false,
+                    text: "sample note",
+                    textangle: 0,
+                    ax: 0,
+                    ay: -75,
+                    arrowcolor: "blue",
+                    arrowsize:3,
+                    arrowwidth:1,
+                    arrowhead: 1
+                },{
+                    x: 4,
+                    y: 2,
+                    z: 4,
+                    visible: false,
+                    text: "sample 2",
+                    textangle: 0,
+                    ax: 0,
+                    ay: -75,
+                    arrowcolor: "blue",
+                    arrowsize:3,
+                    arrowwidth:1,
+                    arrowhead: 1
+                }]    */ 
 
 /* eslint-enable no-alert, no-console */

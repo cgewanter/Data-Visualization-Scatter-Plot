@@ -2,6 +2,23 @@ body{
     width: 80%;
 }
 
+.menuouterbox{
+    float: left;
+    height: auto;
+    border-radius: 25px;
+    border: 2px solid turquoise;
+    border-width: medium;
+    text-align: center;
+    align-content: center;
+    padding: 10px;
+    margin: 10pt;
+    color:black;
+    font-family: "Calibri";
+    font-size: 14pt;
+    width: auto;
+    display:none;
+}
+
 #openFileBox{
     display:inline-block;
     width: 400px;
@@ -25,14 +42,6 @@ body{
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
-}
-
-#graphDiv {
-    display: inline;
-    float:right;
-    width: 30%;  
-    margin-top: 10pt;
-    margin-right: 40pt;
 }
 
 
@@ -94,18 +103,15 @@ font-family: "Agency FB";
 font-size:20pt
 }*/
 
-.select{
-    border-radius: 5px;
-    font-size: 12pt;
-    font-family: "Calibri";
+#titlebox{
+    height: auto;
+    width: auto;
 }
 
-fieldset{
-    text-align: center;
-    border-radius: 10px;
-    border-color: lightgray;
-    padding: 10pt;
-    padding-bottom: 15pt;
+#titleInput{
+    border-radius: 15px;
+    height: 14pt;
+    padding: 4pt
 }
 
 #menuContainer{
@@ -119,28 +125,38 @@ fieldset{
     border-width:medium;
     text-align: center;
     vertical-align:middle;
-    margin: 10pt;
     padding: 10px;
 }
 
-.menuContainer{
+.menubox{
     float: left;
-    border: 2px solid turquoise;
-    border-radius: 25px;
-    border-width:medium;
-    text-align: center;
-}
-
-#titlebox{
-    height: auto;
+    text-align: left;
+    color:black;
+    font-family: "Calibri";
+    font-size: 14pt;
+    margin: 5pt;
+    margin-top: 8pt;
+    margin-bottom: 8pt;
     width: auto;
-    margin:13pt;
+    height: auto;
 }
 
-#titleInput{
-    border-radius: 15px;
-    height: 14pt;
-    padding: 4pt
+fieldset{
+    text-align: center;
+    border-radius: 10px;
+    border-color: lightgray;
+    padding: 10pt;
+    padding-bottom: 15pt;
+}
+
+.select{
+    border-radius: 5px;
+    font-size: 12pt;
+    font-family: "Calibri";
+}
+
+#traceBox{
+    height: 135px;
 }
 
 #hovWrapper {
@@ -163,39 +179,20 @@ fieldset{
 }
 
 
-.menubox{
-    float: left;
-    text-align: left;
-    color:black;
-    font-family: "Calibri";
-    font-size: 14pt;
-    margin: 5pt;
-    margin-top: 8pt;
-    margin-bottom: 8pt;
-    width: auto;
-    height: auto;
-}
 
-.menuouterbox{
-    float: left;
-    height: auto;
-    border-radius: 25px;
-    border: 2px solid turquoise;
-    border-width: medium;
-    text-align: center;
-    align-content: center;
-    padding: 10px;
-    margin: 10pt;
-    color:black;
-    font-family: "Calibri";
-    font-size: 14pt;
-    width: auto;
-    display:none;
-}
 
 .modebar{
     display: none !important;
 }
+
+#graphDiv {
+    display: inline;
+    float:right;
+    width: 30%;  
+    margin-top: 10pt;
+    margin-right: 40pt;
+}
+
 
 
 
