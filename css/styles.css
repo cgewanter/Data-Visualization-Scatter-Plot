@@ -44,8 +44,10 @@ body{
     text-align: left;
 }
 
-#clearAnnBtn{
+#annotDiv{
+    display:none;
     float: right;
+    font-family: "Calibri";
 }
 
 #allMenuContainer{
@@ -201,5 +203,5 @@ fieldset{
 
 
 button {
-    
+
 }

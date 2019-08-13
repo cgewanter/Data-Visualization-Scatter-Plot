@@ -31,6 +31,7 @@ function onClickFileGo(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
+    document.getElementById("annotDiv").style.display="inline-block";
 }
 
 function onClickOpenFile(){
@@ -263,7 +264,7 @@ function setUpAnot(){
             var annotation = {
                 text: anotText,
                 textangle: 0,
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                bgcolor: 'rgba(255, 255, 255, 0.8)',
                 bordercolor: ptColor,
                 borderwidth: 2,
                 arrowcolor: ptColor,
@@ -614,32 +615,5 @@ function onClickClearAnn(){
     annots =[];
     Plotly.relayout("graphDiv", {'scene.annotations':[]});
 }
-/*annotations:[{
-                    x: 1,
-                    y: 8,
-                    z: 5,
-                    visible: false,
-                    text: "sample note",
-                    textangle: 0,
-                    ax: 0,
-                    ay: -75,
-                    arrowcolor: "blue",
-                    arrowsize:3,
-                    arrowwidth:1,
-                    arrowhead: 1
-                },{
-                    x: 4,
-                    y: 2,
-                    z: 4,
-                    visible: false,
-                    text: "sample 2",
-                    textangle: 0,
-                    ax: 0,
-                    ay: -75,
-                    arrowcolor: "blue",
-                    arrowsize:3,
-                    arrowwidth:1,
-                    arrowhead: 1
-                }]    */ 
 
 /* eslint-enable no-alert, no-console */
