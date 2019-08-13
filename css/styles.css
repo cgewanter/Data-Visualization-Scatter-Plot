@@ -44,6 +44,9 @@ body{
     text-align: left;
 }
 
+#clearAnnBtn{
+    float: right;
+}
 
 #allMenuContainer{
     margin-left: 10px;
@@ -196,3 +199,7 @@ fieldset{
 
 
 
+
+button {
+    
+}

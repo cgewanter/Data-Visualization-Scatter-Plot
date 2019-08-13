@@ -20,6 +20,7 @@ var traceMap = new Map();
 var origMap;
 var keys = [];
 var prevSize;
+var annots;
 
 function onClickFileGo(){
     var theFile = document.getElementById("file-input").value;
@@ -128,10 +129,6 @@ function setUpMenus(){
 
 function setUpGraph(){
     Plotly.d3.csv(filename, function(err, rows){
-
-        console.log("orig rows", rows);
-        console.log("access col headers in method", colHeaders);
-
         function unpack(rows, key){
             return rows.map(function(row){
                 return row[key];
@@ -173,7 +170,6 @@ function setUpGraph(){
 
         //set the right options selected in axes dropdowns
         var xOpts = document.getElementById("x-select").children;
-        console.log("xOpts", xOpts);
         for(var i=0; i<xOpts.length; i++){
             if(xOpts[i].value == xInit){
                 xOpts[i].selected =true;
@@ -216,6 +212,7 @@ function setUpGraph(){
         var data = [trace1];
 
         var layout = {
+            hovermode: "closest",
             scene:{
                 annotations:[],
                 xaxis:{title: xInit},
@@ -237,54 +234,69 @@ function setUpGraph(){
         };
         Plotly.newPlot('graphDiv', data, layout);
 
-        var theGraphDiv = document.getElementById("graphDiv");
+        setUpAnot();
 
-        var annots = theGraphDiv.layout.scene.annotations || [];
-        console.log("annots", annots);
+    }); //end csv method
+} //end setupgraph method
 
-        //the onClick function for annotations
-        theGraphDiv.on("plotly_click", function(data){
-            console.log("CLICKED");
+function setUpAnot(){
+    var theGraphDiv = document.getElementById("graphDiv");
 
-            //set a timeout to circumvent recursive action bug with select in scatter3d
-            setTimeout(anotFunc, 100);
-            function anotFunc(){
-                console.log("anots onclick", annots);
-                console.log("data.points", data.points);
-                for(var i=0; i<data.points.length; i++){
-                    anotText = data.points[i].hovertext;
-                    console.log("anotText", anotText);
-                    var ptColor = data.points[i].fullData.marker.color;
-                    var textColor = getColorByBgColor(ptColor);
+    annots= [];
+    //the onClick function for annotations
+    var counter =0;
+    theGraphDiv.removeAllListeners('plotly_click');
+    theGraphDiv.on("plotly_click", function(data){
+        counter++;
+        console.log("clicked", counter);
+        //set a timeout to avoid recursive action bug with select in scatter3d
+        setTimeout(anotFunc, 100);
+        function anotFunc(){
+            console.log("annots onclick", annots);
+            console.log("data.points", data.points);
+            var point = data.points[0];
+            console.log("point", point);
+            anotText = point.hovertext;
+            console.log("anotText", anotText);
+            var ptColor = point.fullData.marker.color;
 
-                    function getColorByBgColor(bgColor) {
-                        if (!bgColor) { return ''; }
-                        return (parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2) ? '#000' : '#fff';
+            var annotation = {
+                text: anotText,
+                textangle: 0,
+                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                bordercolor: ptColor,
+                borderwidth: 2,
+                arrowcolor: ptColor,
+                x: point.x,
+                y: point.y,
+                z: point.z,
+                ax: 0,
+                ay: -50
+            }
+
+            var flag = false;
+            if (annots.length > 0){
+                annots.forEach(function(a){
+                    if (a.x === annotation.x && a.y === annotation.y && a.z === annotation.z){
+                        console.log("duplicate " + a.text);
+                        flag = true;
                     }
-
-                    var annotation = {
-                        text: anotText,
-                        textangle: 0,
-                        bgcolor: "white",
-                        bordercolor: ptColor,
-                        borderwidth: 2,
-                        arrowcolor: ptColor,
-                        x: data.points[i].x,
-                        y: data.points[i].y,
-                        z: data.points[i].z,
-                        ax: 0,
-                        ay: -50
-                    }
-                    //var annots = theGraphDiv.layout.scene.annotations || [];
+                });
+                if (!flag){
+                    console.log("adding " + annotation.text);
                     annots.push(annotation);
-
-                    console.log("layout", theGraphDiv.layout);
-                    console.log("annots after push", annots);
-                    Plotly.relayout("graphDiv", {annotations: annots});
                 }
             }
-        });
-    });
+            else{
+                console.log("empty annots, adding " + annotation.text);
+                annots.push(annotation);
+            }
+
+            console.log("layout", theGraphDiv.layout);
+            console.log("annots after push", annots);
+            Plotly.relayout("graphDiv", {'scene.annotations': annots});
+        } //end anotFunc
+    }); //end on(plotly_click)
 }
 
 //document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
@@ -300,6 +312,8 @@ document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
 document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
 document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
+
+document.getElementById("clearAnnBtn").onclick=function(){onClickClearAnn()};
 
 
 function getXAxisSelection(){
@@ -596,7 +610,10 @@ function onClickTitleBtn(){
     Plotly.relayout("graphDiv", update);
 }
 
-
+function onClickClearAnn(){
+    annots =[];
+    Plotly.relayout("graphDiv", {'scene.annotations':[]});
+}
 /*annotations:[{
                     x: 1,
                     y: 8,
