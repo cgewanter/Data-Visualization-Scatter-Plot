@@ -41,6 +41,7 @@ function onClickOpenFile(){
     fileInput.click();
     fileInput.addEventListener('change', showfileName);
     console.log("open file clicked. fileInput: " , fileInput);
+    console.log("val", fileInput.value);
 
     //function to show the name of the selected file
     function showfileName(event){
@@ -61,7 +62,7 @@ function setUpMenus(){
 
     //Plotly csv function to read data from file
     Plotly.d3.csv(filename, function(csv){
-
+        
         //extract the column headers from the file
         csv.forEach(function(row){
             colHeaders = Object.keys(row);
@@ -568,7 +569,7 @@ function getInnerHovText(key){
     return innerHover;
 }
 
-/*the following function contains the code for the commented-out 'Clear Annotations' button */ 
+/*the following function contains the code for the 'Clear-Annotations' button */ 
 function clearAnnotations(){
     annots =[];
     Plotly.relayout("graphDiv", {'scene.annotations':[]});
