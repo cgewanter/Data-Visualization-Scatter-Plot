@@ -1,19 +1,15 @@
+/* 3d-scatter-plot/js/script.js 
+    - C. Gewanter
+*/
 
-//var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
-
-//filename = 'data.csv';
-
-var colHeaders;
+var filename;       
+var colHeaders;     
 var dataSize;
-var mdChoices =[];
+
+var mdChoices =[];  
 var hoverText =[];
-var wHovertext =[];
-var map;
 
-var xOption;
-var yOption;
-var zOption;
-
+var map;        
 var traceChoice = "all-data";
 var traceMap = new Map();
 var origMap;
@@ -21,42 +17,55 @@ var keys = [];
 var prevSize;
 var annots;
 
-function onClickFileGo(){
-    var theFile = document.getElementById("file-input").value;
-    console.log("theFile", theFile);
-    setUpMenus();
-    setUpGraph();
-    var menus = document.getElementsByClassName("menuouterbox");
-    for(var i=0; i< menus.length; i++){
-        menus[i].style.display="inline-block";
-    }
-    //document.getElementById("annotDiv").style.display="inline-block";
-}
+var xOption;
+var yOption;
+var zOption;
+
+document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
+
+document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
+
+document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
+
+document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
+
+document.getElementById("hoverBtn").onclick= function(){onClickHover()};
+
+document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
+
+//document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
 function onClickOpenFile(){
+    //use the input tag's click() function to open a file-picker window.
     var fileInput = document.getElementById("file-input");
     fileInput.click();
     fileInput.addEventListener('change', showfileName);
     console.log("open file clicked. fileInput: " , fileInput);
 
+    //function to show the name of the selected file
     function showfileName(event){
         var inputVal = event.srcElement;
-        var fileName = inputVal.files[0].name;
-        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + fileName;
-        filename = fileName;
+        var name = inputVal.files[0].name;
+        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + name;
+        filename = name; 
     }
 }
 
+function onClickFileGo(){
+    //call methods to set up the menus and the graph
+    setUpMenus();
+    setUpGraph();  
+}
+
 function setUpMenus(){
-    //Set up hover checklist and x, y, z axes menu, and trace menu
+
+    //Plotly csv function to read data from file
     Plotly.d3.csv(filename, function(csv){
 
-        console.log("csv", csv);
-
+        //extract the column headers from the file
         csv.forEach(function(row){
             colHeaders = Object.keys(row);
         });
-        console.log("colHeaders", colHeaders);
 
         var theHovDiv = document.getElementById("hoverlist");
         var xMenu = document.getElementById("x-select");
@@ -64,28 +73,30 @@ function setUpMenus(){
         var zMenu = document.getElementById("z-select");
         var traceMenu = document.getElementById("trace-select");
 
+        //clear out all the menu divs from any previous data
+        var divArray = [theHovDiv, xMenu, yMenu, zMenu, traceMenu];
+        divArray.forEach(function(div){
+            clearDiv(div);
+        });
+
         function clearDiv(div){
             //clear out the theHovDiv
             while(div.firstChild){
                 div.removeChild(div.firstChild);
             }
         }
-        //clear out all the divs from any previous data
-        var divArray = [theHovDiv, xMenu, yMenu, zMenu, traceMenu];
-        divArray.forEach(function(div){
-            clearDiv(div);
-        });
 
-        //add -select- option to top of traceMenu
+        //add '-none-' option to top of traceMenu for a default of no color filter
         var selectOpt = document.createElement("option");
         selectOpt.selected = true;
         selectOpt.value="all-data";
         selectOpt.innerHTML="-none-";
         traceMenu.appendChild(selectOpt);
 
-        //clear out mdChoices array
+        //clear out metadata choices array for hovertext
         mdChoices =[];
 
+        //loop through each of the column headers and add it to the menus
         for(var i=0; i<colHeaders.length; i++){
 
             //for hover options checkboxes:
@@ -122,19 +133,29 @@ function setUpMenus(){
             traceMenu.appendChild(traceOpt);
         }
 
-    });  //end setting up menu method
+    });  //end setUpMenu function
+
+    //set the menu html elements to display (before file was chosen, they were hidden)
+    var menus = document.getElementsByClassName("menuouterbox");
+    for(var i=0; i< menus.length; i++){
+        menus[i].style.display="inline-block";
+    }
+    //document.getElementById("annotDiv").style.display="inline-block";
 }
-//           *   *   *   *   *   *
-//call a function to set up the graph
 
 function setUpGraph(){
+
     Plotly.d3.csv(filename, function(err, rows){
+
+        //define the unpack function
         function unpack(rows, key){
             return rows.map(function(row){
                 return row[key];
             });
         }
-        //unpack all of the data into a map (using above-defined unpack function)
+
+        /* unpack all of the data into a map (using above-defined unpack function)
+        key: column header; value: an array of all the data in that column */
         map = new Map();
         for(var j=0; j<colHeaders.length; j++){
             var key = colHeaders[j];
@@ -142,59 +163,51 @@ function setUpGraph(){
             dataSize = value.length;
             map.set(key, value);
         }
-        console.log("map", map);    
 
-        //first time - put all data into traceMap as one trace with "all-data" as the key
+        /* put all data into traceMap as one trace with "all-data" as the key. 
+        This traceMap will eventually be reset when a trace-color filter field is picked, 
+        where the name of each individual value of the selected field will be the key 
+        that maps to all points with that value */
+
         traceMap = new Map();
         traceMap.set("all-data", map);
         keys.push("all-data");
-        console.log("orig traceMap", traceMap);
         origMap = traceMap;
-        console.log("origMap/traceMap", origMap);
 
-        //instantiate an array with the columnHeaders of numeric fields
+        //set up an array with the column headers of numeric fields
         var numFields =[];
         for (var k=0; k<colHeaders.length; k++){
-            var array = map.get(colHeaders[k]);
-            //console.log("array " + k, array );
-            if (!isNaN(array[0])){
-                numFields.push(colHeaders[k]);
+            var array = map.get(colHeaders[k]); //the array of values in the field's column
+            if (!isNaN(array[0])){   //check if the field is numeric based on the first value
+                numFields.push(colHeaders[k]); 
             }
         }
-        console.log("numFields array", numFields);
 
         //start the graph out with the first 3 numeric fields available
         var xInit = numFields[0];
         var yInit = numFields[1];
         var zInit = numFields[2];
 
-        //set the right options selected in axes dropdowns
+        //set the pre-selected options for the current x,y,z in the axes dropdowns
         var xOpts = document.getElementById("x-select").children;
         for(var i=0; i<xOpts.length; i++){
-            if(xOpts[i].value == xInit){
-                xOpts[i].selected =true;
-            }
+            if(xOpts[i].value == xInit){ xOpts[i].selected =true; }
         }
         var yOpts = document.getElementById("y-select").children;
         for(var j=0; j<yOpts.length; j++){
-            if (yOpts[j].value == yInit){
-                yOpts[j].selected =true;
-            }
+            if (yOpts[j].value == yInit){ yOpts[j].selected =true; }
         }
         var zOpts = document.getElementById("z-select").children;
         for(var k=0; k<zOpts.length; k++){
-            if(zOpts[k].value== zInit){
-                zOpts[k].selected=true;
-            }
+            if(zOpts[k].value== zInit){ zOpts[k].selected=true; }
         }
 
         //Put empty string as current hoverText to avoid 'undefined'
         for (var i =0; i<dataSize; i++){
             hoverText[i] = "";
         } 
-        //get the hovertext (right now only works for first initial graph with one trace
+        //get the hovertext
         wHoverText = getHoverText();
-        console.log("wHoverText", wHovertext);
 
         //initial starting trace with all data in one trace
         var trace1 = {
@@ -218,7 +231,6 @@ function setUpGraph(){
                 xaxis:{title: xInit},
                 yaxis:{title: yInit},
                 zaxis:{title: zInit}
-
             },
             autosize: false,
             width: 700,
@@ -232,129 +244,89 @@ function setUpGraph(){
             title: 'Enter Chart Title on Left',
 
         };
-        Plotly.newPlot('graphDiv', data, layout).then(g=> setUpAnot());
-
-
+        Plotly.newPlot('graphDiv', data, layout).then(() => setUpAnot());
 
     }); //end csv method
-} //end setupgraph method
+} //end setUpGraph method
 
 function setUpAnot(){
+
     var theGraphDiv = document.getElementById("graphDiv");
 
     annots= [];
     //the onClick function for annotations
-    var counter =0;
-    theGraphDiv.removeAllListeners('plotly_click');
     theGraphDiv.on("plotly_click", function(data){
-
-        counter++;
-        console.log("clicked", counter);
 
         //set a timeout to avoid recursive action bug with select in scatter3d
         setTimeout(anotFunc, 100);
-        function anotFunc(){
-            console.log("annots onclick", annots);
-            console.log("data.points", data.points);
-            var point = data.points[0];
-            console.log("point", point);
 
-            //check if the point is already in the annots array with visible: false
+        function anotFunc(){
+
+            var point = data.points[0]; //capture the selected point
+
+            //if the point is already in the annots array, set its visibility to true
             var found = false;
             annots.forEach(function(a){
                 if(point.x === a.x && point.y === a.y && point.z === a.z){
-                    console.log("found an existing annotation");
                     a.visible = true;
                     found = true;
                 }
             });
 
+            //if there is not yet an annotation, create one
             if(!found){
-                anotText = point.hovertext;
+                anotText = point.hovertext; //use hovertext for annotation text
                 console.log("anotText", anotText);
                 var ptColor = point.fullData.marker.color;
 
                 var annotation = {
+                    x: point.x,
+                    y: point.y,
+                    z: point.z,
                     text: anotText,
-                    textangle: 0,
                     bgcolor: 'rgba(255, 255, 255, 0.8)',
                     bordercolor: ptColor,
                     borderwidth: 2,
                     arrowcolor: "black",
                     arrowwidth: 2,
-                    x: point.x,
-                    y: point.y,
-                    z: point.z,
                     ax: 0,
                     ay: -50,
-                    captureevents: true
+                    captureevents: true 
                 }
 
-                var flag = false;
-                if (annots.length > 0){
-                    annots.forEach(function(a){
-                        if (a.x === annotation.x && a.y === annotation.y && a.z === annotation.z){
-                            console.log("duplicate " + a.text);
-                            flag = true;
-                        }
-                    });
-                    if (!flag){
-                        console.log("adding " + annotation.text);
-                        annots.push(annotation);
-                    }
-                }
-                else{
-                    console.log("empty annots, adding " + annotation.text);
-                    annots.push(annotation);
-                }
+                annots.push(annotation); 
+
             } //end if !found
 
-            console.log("layout", theGraphDiv.layout);
-            console.log("annots after push", annots);
             Plotly.relayout("graphDiv", {'scene.annotations': annots});
         } //end anotFunc
     }); //end on(plotly_click)
 
     theGraphDiv.on("plotly_clickannotation",function(data){
-        console.log("annotation clicked");
-        console.log("data", data);
+
         data.annotation.visible = false;
         Plotly.relayout("graphDiv", {'scene.annotations': annots});
+
     }); //end on(plotly_clickannotation)
+
 }//end setUpAnot function
 
-//document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
-
-document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
-
-document.getElementById("hoverBtn").onclick= function(){onClickHover()};
-
-document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
-
-document.getElementById("titleBtn").onclick=function(){onClickTitleBtn()};
-
-document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
-
-document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
-
-//document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
-
+function onClickTitleBtn(){
+    var newTitle = document.getElementById("titleInput").value;
+    Plotly.relayout("graphDiv", {title: newTitle});
+}
 
 function getXAxisSelection(){
-
     var x = document.getElementById("x-select");
-    xOption = x.options[x.selectedIndex].value;
-    return xOption;
+    return x.options[x.selectedIndex].value;
 }
 function getYAxisSelection(){
-    var z = document.getElementById("y-select");
-    yOption = z.options[z.selectedIndex].value;
-    return yOption;
+    var y = document.getElementById("y-select");
+    return y.options[y.selectedIndex].value;
 }
 function getZAxisSelection(){
     var z = document.getElementById("z-select");
-    zOption = z.options[z.selectedIndex].value;
-    return zOption;
+    return z.options[z.selectedIndex].value;
 }
 
 function onClickXYZ(){
@@ -363,13 +335,12 @@ function onClickXYZ(){
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
 
-    console.log("traceMap", traceMap);
-
     var hoverText = getHoverText();
 
+    //set up new traces
     var newTraces =[];
+
     traceMap.forEach(function(value, key, map){
-        console.log("try:" , traceMap.get(key).get(xOption));
         var theTrace ={
             x: traceMap.get(key).get(xOption),
             y: traceMap.get(key).get(yOption),
@@ -381,23 +352,22 @@ function onClickXYZ(){
             hovertext: hoverText.get(key),
             opacity: 0.4
         }
-        console.log("theTrace", theTrace);
         newTraces.push(theTrace);
     });
-    console.log("traces", newTraces);
-    console.log("prevSize", traceMap.size);
+
+    //clear annotations from previous graph
+    clearAnnotations();
+
+    //delete previous traces
     var delArray=[];
     for (var t=0; t<traceMap.size; t++){
         delArray.push(t);
     }
-    //clear annotations from previous graph
-    clearAnnotations();
 
-    console.log("about to redo graph");
-    console.log("delArray", delArray);
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", newTraces);
 
+    //reset axis titles based on new x,y,z
     var layoutUpdate ={
         'scene.xaxis.title': xOption,
         'scene.yaxis.title': yOption,
@@ -407,10 +377,12 @@ function onClickXYZ(){
 }
 
 function onClickHover(){
-    //clear out the mdChoices array so can start over from what is checked now
+
+    //clear out previous metadata choices
     mdChoices =[];
-    var mdList = document.getElementById("hoverlist");
-    var options = mdList.children;
+
+    //get a list of currently checked choices
+    var options = document.getElementById("hoverlist").children;
     for(var i =0; i<options.length; i++){
         if (options[i].checked){
             if (!mdChoices.includes(options[i].value)){
@@ -418,10 +390,8 @@ function onClickHover(){
             }
         }
     }
-    console.log("checked hover choices:", mdChoices);
 
-    hoverText = getHoverText();
-    console.log("hoverText", hoverText);
+    hoverText = getHoverText(); //retrieve the hoverText map
 
     xOption = getXAxisSelection();
     yOption = getYAxisSelection();
@@ -437,67 +407,52 @@ function onClickHover(){
             mode: 'markers',
             type: 'scatter3d',
             hoverinfo: "text",
-            hovertext: hoverText.get(key),
+            hovertext: hoverText.get(key), //for each trace, get the array of text from the map
             opacity: 0.4
         }
-        console.log("theTrace", theTrace);
         newTraces.push(theTrace);
     });
-    console.log("traces", newTraces);
-    console.log("prevSize", traceMap.size);
+
+    //delete previous traces
     var delArray=[];
     for (var t=0; t<traceMap.size; t++){
         delArray.push(t);
     }
-    console.log("about to redo graph");
-    console.log("delArray", delArray);
+
+    clearAnnotations(); //clear all previous annotations
+
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", newTraces);
 }
 
 function onClickTraceBtn(){
-    keys =[];
-    prevSize =1;
-    try{
-        prevSize = traceMap.size;
-    }
-    catch(err){
-        console.log(err.message);
-    }
 
-    var checked= false;
+    prevSize = traceMap.size;
 
-    //save the chosen field in traceChoice variable
+    var checked= true;
+
+    //save the selected trace field
     var trc = document.getElementById("trace-select");
     traceChoice = trc.options[trc.selectedIndex].value;
 
-    if (traceChoice != "all-data"){
-        checked = true;
-    }
-    console.log("traceChoice", traceChoice);
-
-    console.log("ANYTHING SELECTED: " , checked);
-
-    if (!checked){
+    //if no filter, use original map
+    if (traceChoice === "all-data"){
         traceMap = origMap;
-        console.log("none checked. tracemap: ", traceMap);
+        checked = false;
     }
 
     else{
-        //make an array of all the different values in that field
+        //make an array of all the unique values in that field
         var allVals = map.get(traceChoice);
         var uniqueVals =[];
-        console.log("allVals", allVals);
         allVals.forEach(function(val){
             if (!uniqueVals.includes(val)){
                 uniqueVals.push(val);
             }
         });
-        console.log("uniqueVals", uniqueVals);
 
         //instantiate the new Map that will have each unique val as a key:
         traceMap = new Map();
-        console.log("TRACEMAP-BEFORE", traceMap);
 
         //for each unique value (=each trace)
         var innerMap;
@@ -509,28 +464,22 @@ function onClickTraceBtn(){
                 for(var i=0; i<colHeaders.length; i++){
                     //clear out the inner array
                     innerArray=[];
-                    var allXs = map.get(colHeaders[i]);
-                    //console.log("allXs",allXs);
-                    //for each value in this column header
-                    for(var x=0; x<allXs.length; x++){
-                        //console.log("allVals[i] vs val", allVals[x] + " vs " + val);
-                        //if the value at this header is the same as val, push the x-value onto the inner array
+                    var allFieldVals = map.get(colHeaders[i]);
+                    //for each value in this array
+                    for(var x=0; x<allFieldVals.length; x++){
+                        //if the value at this header is the same the unique val, push the x-value onto the inner array
                         if (allVals[x]==val){
-                            innerArray.push(allXs[x]);
+                            innerArray.push(allFieldVals[x]);
                         }
                     }
-                    //console.log("innerArray" + i, innerArray);
                     //put this new filtered array into the map with the col header as key
                     innerMap.set(colHeaders[i], innerArray);
                 };
-                //console.log("innerMap", innerMap);  
                 //put the inner map as a value into the big outer map
                 traceMap.set(val, innerMap);
                 keys.push(val);
             }
         );
-        console.log("traceMap", traceMap);
-        console.log("keys", keys);
     }
 
     //now replot the graph based on the new traces 
@@ -547,9 +496,8 @@ function onClickTraceBtn(){
     if (checked){ theKeys = uniqueVals;}
     else {theKeys.push("all-data");} 
 
+    //set up a trace for each key
     theKeys.forEach(function(val){
-        console.log("xOption", xOption);
-        console.log("traceMap.get(val).get(x): ", traceMap.get(val).get(xOption));
 
         theTrace = {
             x: traceMap.get(val).get(xOption),
@@ -566,14 +514,12 @@ function onClickTraceBtn(){
         };
         traces.push(theTrace);
     });
-    console.log("traces: " , traces);
-    var data = traces;
+
+    //delete previous traces
     var delArray = [0];
-    console.log("prevSize", prevSize);
     for (var t=1; t<prevSize; t++){
         delArray.push(t);
     }
-    console.log("delArray", delArray);
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", traces);
 }
@@ -581,10 +527,6 @@ function onClickTraceBtn(){
 function getHoverText(){
     wHoverText = new Map();
     traceMap.forEach(function(value, key, map){
-        console.log("in traceMap.forEach");
-        console.log("trace:", key);
-        console.log("value: ", value);
-        console.log("map: ", map);
 
         htArray = getInnerHovText(key);
         //console.log("htArray for " +key, htArray);
@@ -596,8 +538,7 @@ function getHoverText(){
 
 function getInnerHovText(key){
     console.log("in inner ht method");
-    //clear out hoverText so does not contain all prev data
-    //Put empty string as current hoverText to avoid 'undefined'
+
     var innerMap = traceMap.get(key);
     console.log("inner map", innerMap);
 
@@ -627,17 +568,9 @@ function getInnerHovText(key){
     return innerHover;
 }
 
-function onClickTitleBtn(){
-    var tElem = document.getElementById("titleInput");
-    var newTitle = tElem.value;
-    console.log("title", newTitle);
-    var update = {
-        title: newTitle
-    }
-    Plotly.relayout("graphDiv", update);
-}
-
+/*the following function contains the code for the commented-out 'Clear Annotations' button */ 
 function clearAnnotations(){
     annots =[];
     Plotly.relayout("graphDiv", {'scene.annotations':[]});
 }
+

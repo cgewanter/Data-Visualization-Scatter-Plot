@@ -3,33 +3,34 @@
 
     <head>
         <link rel="stylesheet" href="css/styles.css">
-        <!--<script src="https://d3js.org/d3.v5.js"></script>-->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <!--<script src="https://gist.github.com/nasser/5a430724769724fae0bf03fbf054263a.js"></script>-->
     </head>
 
     <body>
 
+        <!-- GRAPH ELEMENT -->
         <div id="graphDiv" class="graph">
-
-            <!--<div id=annotDiv>
-                <p class="subtext" style="margin: 5pt">Click on a point to set an annotation</p>
-                <button id="clearAnnBtn" class="button">Clear annotations</button>
-            </div>-->
-
+            
+            <!-- The follwing commented out div allows for all annotations to be cleared at once. To activate, the javascript code that handles the button should be uncommented as well.-->
+            <!--<div id=annotDiv> <p class="subtext" style="margin: 5pt">Click on a point to set an annotation</p><button id="clearAnnBtn" class="button">Clear annotations</button> </div>-->
+            
         </div>
 
+        <!-- ALL MENUS ELEMENTS -->
         <div id="allMenuContainer">
 
+            <!-- Open-File Box -->
             <div id= "openFileBox" class= "menuouterbox">
                 <p class="menutitle">Choose a File</p>
                 <p class="subtext">Choose the file to use as a data source for the graph:</p>
                 <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
+                <!-- only accept selected input file types -->
                 <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
                 <span id="fileNameSpan"> &nbsp[No file selected]</span>
                 <button id="goFileBtn" class="button">Go</button>
             </div>
 
+            <!-- Title Box -->
             <div id="titlebox" class="menuouterbox">
                 <p class= "menutitle">Enter Chart Title:</p>
                 <p></p>
@@ -37,64 +38,60 @@
                 <button id="titleBtn" class="button">Apply</button>
             </div>
 
-            <div id="menuContainer" class ="menuouterbox">
+            <!-- Axis Outer Box -->
+            <div id="axisMenuContainer" class ="menuouterbox">
 
+                <!-- x-axis inner box -->
                 <div id="dataXDiv" class="menubox">
-
                     <fieldset id= "x-fieldset">
                         <legend>X-Axis Field</legend>
-                        <select id="x-select" class="select">
-                            <option selected disabled value ="select">-select-</option>
-                        </select>
+                        <select id="x-select" class="select"></select>
                     </fieldset>
-
                 </div>
+
+                <!-- y-axis inner box -->
                 <div id="dataYDiv" class="menubox">
                     <fieldset id ="y-fieldset">
                         <legend>Y-Axis Field</legend>
-                        <select id="y-select" class="select">
-                            <option selected disabled value="select">-select-</option>
-                        </select>
+                        <select id="y-select" class="select"></select>
                     </fieldset>
-
                 </div>
+
+                <!-- z-axis inner box -->
                 <div id="dataZDiv" class="menubox">
                     <fieldset id ="z-fieldset">
                         <legend>Z-Axis Field</legend>
-                        <select id="z-select" class="select">
-                            <option selected disabled value="select">-select-</option>
-                        </select>
+                        <select id="z-select" class="select"></select>
                     </fieldset>
                 </div>
-
                 <br/>
                 <button id="xyzBtn" class= "button">Apply</button>
 
             </div>
 
+            <!-- Trace (filter by color) Box -->
             <div id="traceBox" class="menuouterbox">
                 <fieldset id="trace-fieldset">
                     <legend>Filter points by color by: </legend>
-                    <select id="trace-select" class="select">
-                        <option selected disabled value="select">-select-</option>
-                    </select>
+                    <select id="trace-select" class="select"></select>
                     <br/><br/>
                     <button id= "traceBtn" class="button">Apply</button>
-
                 </fieldset>
             </div>
 
+            <!-- Hover-text Box -->
             <div id="hovWrapper" class=menuouterbox>
                 <p class=menutitle>Hover Text</p>
                 <p class="subtext">Choose which fields to show on mouse hover:</p>
                 <div id="hovListDiv">
-
                     <ul id="hoverlist"></ul>
                 </div>
                 <button id="hoverBtn" class="button">Apply</button>
             </div>
+            
         </div>
         <br/>
+
         <script src="js/script.js"></script>
 
     </body>
