@@ -48,6 +48,10 @@ body{
     display:none;
     float: right;
     font-family: "Calibri";
+    border: 1pt dotted gray;
+    border-radius: 15pt;
+    padding: 2pt;
+    text-align: center;
 }
 
 #allMenuContainer{

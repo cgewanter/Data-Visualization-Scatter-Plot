@@ -1,4 +1,3 @@
-/* eslint-disable no-alert, no-console */
 
 //var filename = 'https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv';
 
@@ -31,7 +30,7 @@ function onClickFileGo(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
-    document.getElementById("annotDiv").style.display="inline-block";
+    //document.getElementById("annotDiv").style.display="inline-block";
 }
 
 function onClickOpenFile(){
@@ -233,9 +232,9 @@ function setUpGraph(){
             title: 'Enter Chart Title on Left',
 
         };
-        Plotly.newPlot('graphDiv', data, layout);
+        Plotly.newPlot('graphDiv', data, layout).then(g=> setUpAnot());
 
-        setUpAnot();
+
 
     }); //end csv method
 } //end setupgraph method
@@ -248,8 +247,10 @@ function setUpAnot(){
     var counter =0;
     theGraphDiv.removeAllListeners('plotly_click');
     theGraphDiv.on("plotly_click", function(data){
+
         counter++;
         console.log("clicked", counter);
+
         //set a timeout to avoid recursive action bug with select in scatter3d
         setTimeout(anotFunc, 100);
         function anotFunc(){
@@ -257,48 +258,70 @@ function setUpAnot(){
             console.log("data.points", data.points);
             var point = data.points[0];
             console.log("point", point);
-            anotText = point.hovertext;
-            console.log("anotText", anotText);
-            var ptColor = point.fullData.marker.color;
 
-            var annotation = {
-                text: anotText,
-                textangle: 0,
-                bgcolor: 'rgba(255, 255, 255, 0.8)',
-                bordercolor: ptColor,
-                borderwidth: 2,
-                arrowcolor: ptColor,
-                x: point.x,
-                y: point.y,
-                z: point.z,
-                ax: 0,
-                ay: -50
-            }
+            //check if the point is already in the annots array with visible: false
+            var found = false;
+            annots.forEach(function(a){
+                if(point.x === a.x && point.y === a.y && point.z === a.z){
+                    console.log("found an existing annotation");
+                    a.visible = true;
+                    found = true;
+                }
+            });
 
-            var flag = false;
-            if (annots.length > 0){
-                annots.forEach(function(a){
-                    if (a.x === annotation.x && a.y === annotation.y && a.z === annotation.z){
-                        console.log("duplicate " + a.text);
-                        flag = true;
+            if(!found){
+                anotText = point.hovertext;
+                console.log("anotText", anotText);
+                var ptColor = point.fullData.marker.color;
+
+                var annotation = {
+                    text: anotText,
+                    textangle: 0,
+                    bgcolor: 'rgba(255, 255, 255, 0.8)',
+                    bordercolor: ptColor,
+                    borderwidth: 2,
+                    arrowcolor: "black",
+                    arrowwidth: 2,
+                    x: point.x,
+                    y: point.y,
+                    z: point.z,
+                    ax: 0,
+                    ay: -50,
+                    captureevents: true
+                }
+
+                var flag = false;
+                if (annots.length > 0){
+                    annots.forEach(function(a){
+                        if (a.x === annotation.x && a.y === annotation.y && a.z === annotation.z){
+                            console.log("duplicate " + a.text);
+                            flag = true;
+                        }
+                    });
+                    if (!flag){
+                        console.log("adding " + annotation.text);
+                        annots.push(annotation);
                     }
-                });
-                if (!flag){
-                    console.log("adding " + annotation.text);
+                }
+                else{
+                    console.log("empty annots, adding " + annotation.text);
                     annots.push(annotation);
                 }
-            }
-            else{
-                console.log("empty annots, adding " + annotation.text);
-                annots.push(annotation);
-            }
+            } //end if !found
 
             console.log("layout", theGraphDiv.layout);
             console.log("annots after push", annots);
             Plotly.relayout("graphDiv", {'scene.annotations': annots});
         } //end anotFunc
     }); //end on(plotly_click)
-}
+
+    theGraphDiv.on("plotly_clickannotation",function(data){
+        console.log("annotation clicked");
+        console.log("data", data);
+        data.annotation.visible = false;
+        Plotly.relayout("graphDiv", {'scene.annotations': annots});
+    }); //end on(plotly_clickannotation)
+}//end setUpAnot function
 
 //document.getElementById("applyAll").onclick=function(){onClickApplyAll()};
 
@@ -314,7 +337,7 @@ document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
 document.getElementById("goFileBtn").onclick=function(){onClickFileGo()};
 
-document.getElementById("clearAnnBtn").onclick=function(){onClickClearAnn()};
+//document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
 
 function getXAxisSelection(){
@@ -367,6 +390,9 @@ function onClickXYZ(){
     for (var t=0; t<traceMap.size; t++){
         delArray.push(t);
     }
+    //clear annotations from previous graph
+    clearAnnotations();
+
     console.log("about to redo graph");
     console.log("delArray", delArray);
     Plotly.deleteTraces("graphDiv", delArray);
@@ -611,9 +637,7 @@ function onClickTitleBtn(){
     Plotly.relayout("graphDiv", update);
 }
 
-function onClickClearAnn(){
+function clearAnnotations(){
     annots =[];
     Plotly.relayout("graphDiv", {'scene.annotations':[]});
 }
-
-/* eslint-enable no-alert, no-console */
