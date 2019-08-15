@@ -22,11 +22,11 @@
             <!-- Open-File Box -->
             <div id= "openFileBox" class= "menuouterbox">
                 <p class="menutitle">Choose a File</p>
-                <p class="subtext">Choose the file to use as a data source for the graph:</p>
-                <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
+                <br>
+                <button id="fileOpenBtn" class="button" style="display:inline-block;">Open</button>
                 <!-- only accept selected input file types. .xlsx files should be saved as .csv -->
                 <input id="file-input" type="file" style="display: none;" accept=".csv" /> 
-                <span id="fileNameSpan"> &nbsp[No file selected]</span>
+                <span id="fileNameSpan"> &nbsp;[No file selected]</span>
                 <button id="goFileBtn" class="button">Go</button>
             </div>
 
@@ -72,7 +72,7 @@
             <!-- Trace (filter by color) Box -->
             <div id="traceBox" class="menuouterbox">
                 <fieldset id="trace-fieldset">
-                    <legend>Filter points by color by: </legend>
+                    <legend>Group by: </legend>
                     <select id="trace-select" class="select"></select>
                     <br/><br/>
                     <button id= "traceBtn" class="button">Apply</button>
@@ -81,15 +81,27 @@
 
             <!-- Hover-text Box -->
             <div id="hovWrapper" class=menuouterbox>
-                <p class=menutitle>Hover Text</p>
-                <p class="subtext">Choose which fields to show on mouse hover:</p>
+                <p class=menutitle>Annotations</p>
+                <br>
                 <div id="hovListDiv">
                     <ul id="hoverlist"></ul>
                 </div>
                 <button id="hoverBtn" class="button">Apply</button>
             </div>
             
+            
+            <div id= "sliderBox" class=menuouterbox>
+                Opacity:
+                <input id="opacSlider" type="range" min="0" max="1" value="0.5" step= ".01">
+                <span id = "opacText"></span>
+                <br>
+                Size:
+                <input id= "sizeSlider" type ="range" min="0" max ="20" value="6" step=".01">
+                <span id = "sizeText"></span>
+            </div>
+            
         </div>
+        
         <br/>
 
         <script src="js/script.js"></script>

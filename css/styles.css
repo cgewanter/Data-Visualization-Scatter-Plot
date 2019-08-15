@@ -35,8 +35,8 @@ body{
 
 #openFileBox{
     display:inline-block;
-    width: 400px;
-    height: 125px;
+    width: 200px;
+    height: 150px;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -143,13 +143,13 @@ fieldset{
 }
 
 #hovWrapper {
-    width: 200px;
-    height: 300px;
+    width: 175px;
+    height: 250px;
 }
 
 #hovListDiv {
     height: 150px; 
-    width: 195px;
+    width: 165px;
     overflow: auto;
     border: 1pt solid lightgray;
     border-radius: 5px;
@@ -161,9 +161,9 @@ fieldset{
     text-align: left;
 }
 
-.modebar{
+/*.modebar{
     display: none !important;
-}
+}*/
 
 /*#annotDiv{
     display:none;

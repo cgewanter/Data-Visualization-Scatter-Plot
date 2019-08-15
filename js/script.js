@@ -16,6 +16,9 @@ var keys = [];
 var prevSize;
 var annots;
 
+var opacity;
+var size;
+
 var xOption;
 var yOption;
 var zOption;
@@ -31,6 +34,12 @@ document.getElementById("xyzBtn").onclick=function(){onClickXYZ()};
 document.getElementById("hoverBtn").onclick= function(){onClickHover()};
 
 document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
+
+var opacSlider = document.getElementById("opacSlider");
+opacSlider.oninput= function(){onSlideOpac()};
+
+var sizeSlider = document.getElementById("sizeSlider");
+sizeSlider.oninput= function(){onSlideSize()};
 
 //document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
@@ -137,15 +146,32 @@ function setUpMenus(){
             traceOpt.innerHTML = colHeaders[i];
             traceMenu.appendChild(traceOpt);
         }
-
-    });  //end setUpMenu function
+    });
 
     //set the menu html elements to display (before file was chosen, they were hidden)
     var menus = document.getElementsByClassName("menuouterbox");
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
+    
+    //set text of sliders to default values
+    document.getElementById("opacText").innerHTML = opacity;
+    document.getElementById("sizeText").innerHTML = size;
+    
     //document.getElementById("annotDiv").style.display="inline-block";
+}
+
+function onSlideOpac(){
+    opacity = opacSlider.value;
+    console.log("opacity", opacity);
+    //document.getElementById("opacText").innerHTML = opacity;
+    Plotly.restyle("graphDiv", {'marker.opacity': opacity});
+}
+
+function onSlideSize(){
+    size = sizeSlider.value;
+    //document.getElementById("sizeText").innerHTML = size;
+    Plotly.restyle("graphDiv", {'marker.size': size});
 }
 
 function setUpGraph(){
@@ -225,7 +251,7 @@ function setUpGraph(){
             hoverinfo: "text",
             hovertext: wHoverText,
             textposition: "top",
-            opacity: 0.4
+            opacity: 0.5
         };
         var data = [trace1];
 
@@ -462,11 +488,11 @@ function onClickTraceBtn(){
         var innerMap;
         uniqueVals.forEach(
             function(val){
-                
+
                 innerMap = new Map(); //map where each colHeader is key and its values are the value
                 //for each column header: filter the array into a new array
                 var innerArray =[];
-                
+
                 for(var i=0; i<colHeaders.length; i++){
                     innerArray=[];  //clear out the inner array
                     var allFieldVals = map.get(colHeaders[i]);
