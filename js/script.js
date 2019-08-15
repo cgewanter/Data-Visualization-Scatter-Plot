@@ -1,6 +1,5 @@
 /* 3d-scatter-plot/js/script.js 
-    - C. Gewanter
-*/
+    - C. Gewanter  */
 
 var filename;       
 var colHeaders;     
@@ -36,23 +35,28 @@ document.getElementById("traceBtn").onclick= function(){onClickTraceBtn()};
 //document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
 function onClickOpenFile(){
+
     //use the input tag's click() function to open a file-picker window.
     var fileInput = document.getElementById("file-input");
     fileInput.click();
     fileInput.addEventListener('change', showfileName);
-    console.log("open file clicked. fileInput: " , fileInput);
-    console.log("val", fileInput.value);
 
     //function to show the name of the selected file
     function showfileName(event){
-        var inputVal = event.srcElement;
-        var name = inputVal.files[0].name;
-        document.getElementById("fileNameSpan").innerHTML = "&nbsp" + name;
-        filename = name; 
+        var name = event.srcElement.files[0].name;
+        document.getElementById("fileNameSpan").innerHTML = "&nbsp;" + name;
+
+        //(temp) set filename to open (must be in same directory as html file):
+        filename = name;
     }
 }
 
 function onClickFileGo(){
+
+    /*this will set filename to the path - commented out for now because 
+    chrome security did not let file access*/
+    //filename = document.getElementById("file-input").value;
+
     //call methods to set up the menus and the graph
     setUpMenus();
     setUpGraph();  
@@ -62,7 +66,7 @@ function setUpMenus(){
 
     //Plotly csv function to read data from file
     Plotly.d3.csv(filename, function(csv){
-        
+
         //extract the column headers from the file
         csv.forEach(function(row){
             colHeaders = Object.keys(row);
@@ -258,7 +262,7 @@ function setUpAnot(){
     //the onClick function for annotations
     theGraphDiv.on("plotly_click", function(data){
 
-        //set a timeout to avoid recursive action bug with select in scatter3d
+        //set a timeout to avoid recursive action bug with clicking in scatter3d
         setTimeout(anotFunc, 100);
 
         function anotFunc(){
@@ -277,7 +281,6 @@ function setUpAnot(){
             //if there is not yet an annotation, create one
             if(!found){
                 anotText = point.hovertext; //use hovertext for annotation text
-                console.log("anotText", anotText);
                 var ptColor = point.fullData.marker.color;
 
                 var annotation = {
@@ -443,7 +446,7 @@ function onClickTraceBtn(){
     }
 
     else{
-        //make an array of all the unique values in that field
+        //set up an array of all the unique values in that field
         var allVals = map.get(traceChoice);
         var uniqueVals =[];
         allVals.forEach(function(val){
@@ -459,12 +462,13 @@ function onClickTraceBtn(){
         var innerMap;
         uniqueVals.forEach(
             function(val){
+                
                 innerMap = new Map(); //map where each colHeader is key and its values are the value
                 //for each column header: filter the array into a new array
                 var innerArray =[];
+                
                 for(var i=0; i<colHeaders.length; i++){
-                    //clear out the inner array
-                    innerArray=[];
+                    innerArray=[];  //clear out the inner array
                     var allFieldVals = map.get(colHeaders[i]);
                     //for each value in this array
                     for(var x=0; x<allFieldVals.length; x++){
@@ -538,18 +542,14 @@ function getHoverText(){
 }
 
 function getInnerHovText(key){
-    console.log("in inner ht method");
 
     var innerMap = traceMap.get(key);
-    console.log("inner map", innerMap);
-
     var innerHover =[];
 
+    //populate the inner array with blank strings
     for (var i =0; i<innerMap.get(colHeaders[0]).length; i++){
         innerHover[i] ="";
     } 
-    //console.log("innerHover after populate with blank strings", innerHover);
-
     //outer and inner loop to populate the hovertext
     //outer: goes through each data point
     //inner: goes through each field (x, y, z, ... name ... etc)
@@ -563,9 +563,6 @@ function getInnerHovText(key){
             innerHover[m] += header + ": " + array[m] +  '<br>';
         }
     }
-    //console.log("innerHover for " + key, innerHover);
-
-    //console.log("hoverText in method", hoverText);
     return innerHover;
 }
 

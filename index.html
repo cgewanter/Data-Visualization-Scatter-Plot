@@ -11,7 +11,7 @@
         <!-- GRAPH ELEMENT -->
         <div id="graphDiv" class="graph">
             
-            <!-- The follwing commented out div allows for all annotations to be cleared at once. To activate, the javascript code that handles the button should be uncommented as well.-->
+            <!-- The following commented out div allows for all annotations to be cleared at once. To activate, the javascript code that handles the button should be uncommented as well.-->
             <!--<div id=annotDiv> <p class="subtext" style="margin: 5pt">Click on a point to set an annotation</p><button id="clearAnnBtn" class="button">Clear annotations</button> </div>-->
             
         </div>
@@ -24,8 +24,8 @@
                 <p class="menutitle">Choose a File</p>
                 <p class="subtext">Choose the file to use as a data source for the graph:</p>
                 <button id="fileOpenBtn" class="button" style="display:inline-block;">Open...</button>
-                <!-- only accept selected input file types -->
-                <input id="file-input" type="file" style="display: none;" accept=".csv, .xls, .xlsx" /> 
+                <!-- only accept selected input file types. .xlsx files should be saved as .csv -->
+                <input id="file-input" type="file" style="display: none;" accept=".csv" /> 
                 <span id="fileNameSpan"> &nbsp[No file selected]</span>
                 <button id="goFileBtn" class="button">Go</button>
             </div>

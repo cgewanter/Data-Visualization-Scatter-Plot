@@ -2,6 +2,20 @@ body{
     width: 80%;
 }
 
+#graphDiv {
+    display: inline;
+    float:right;
+    width: 30%;  
+    margin-top: 10pt;
+    margin-right: 40pt;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+#allMenuContainer{
+    margin-left: 10px;
+}
+
 .menuouterbox{
     float: left;
     height: auto;
@@ -44,24 +58,9 @@ body{
     text-align: left;
 }
 
-#annotDiv{
-    display:none;
-    float: right;
-    font-family: "Calibri";
-    border: 1pt dotted gray;
-    border-radius: 15pt;
-    padding: 2pt;
-    text-align: center;
-}
-
-#allMenuContainer{
-    margin-left: 10px;
-}
-
 .subtext{
     font-size: 13pt;
 }
-
 
 .menutitle{
     margin:2pt;
@@ -83,34 +82,6 @@ body{
 .button:hover{
     background-color: darkgray;
 }
-
-.center{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
-.graph{
-    width: 49%;
-    vertical-align: middle;
-    margin: 0 auto;
-}
-
-/*#listDiv {
-float: left;
-height: 150px;
-border-radius: 25px;
-border: 2px solid turquoise;
-border-width:medium;
-width: 35%;
-text-align: center;
-align-content: center;
-padding: 10px;
-color:gray;
-font-family: "Agency FB";
-font-size:20pt
-}*/
 
 #titlebox{
     height: auto;
@@ -162,6 +133,8 @@ fieldset{
     border-radius: 5px;
     font-size: 12pt;
     font-family: "Calibri";
+    max-width: 300px;
+    overflow: auto;
 }
 
 #traceBox{
@@ -188,25 +161,18 @@ fieldset{
     text-align: left;
 }
 
-
-
-
 .modebar{
     display: none !important;
 }
 
-#graphDiv {
-    display: inline;
-    float:right;
-    width: 30%;  
-    margin-top: 10pt;
-    margin-right: 40pt;
-}
+/*#annotDiv{
+    display:none;
+    float: right;
+    font-family: "Calibri";
+    border: 1pt dotted gray;
+    border-radius: 15pt;
+    padding: 2pt;
+    text-align: center;
+}*/
 
 
-
-
-
-button {
-
-}
