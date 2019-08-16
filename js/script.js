@@ -17,7 +17,8 @@ var prevSize;
 var annots;
 
 var opacity;
-var size;
+var ptSize;
+var fontSize;
 
 var xOption;
 var yOption;
@@ -40,6 +41,9 @@ opacSlider.oninput= function(){onSlideOpac()};
 
 var sizeSlider = document.getElementById("sizeSlider");
 sizeSlider.oninput= function(){onSlideSize()};
+
+var fontSlider = document.getElementById("fontSlider");
+fontSlider.oninput=function(){onSlideFont()};
 
 //document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
@@ -153,25 +157,28 @@ function setUpMenus(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
-    
-    //set text of sliders to default values
+    opacity = document.getElementById("opacSlider").value;
     document.getElementById("opacText").innerHTML = opacity;
-    document.getElementById("sizeText").innerHTML = size;
-    
+
     //document.getElementById("annotDiv").style.display="inline-block";
 }
 
 function onSlideOpac(){
     opacity = opacSlider.value;
-    console.log("opacity", opacity);
-    //document.getElementById("opacText").innerHTML = opacity;
+    document.getElementById("opacText").innerHTML = opacity;
     Plotly.restyle("graphDiv", {'marker.opacity': opacity});
 }
 
+function onSlideFont(){
+    fontSize=fontSlider.value;
+    document.getElementById("fontText").innerHTML=fontSize;
+    Plotly.relayout("graphDiv", {'font.size': fontSize});
+}
+
 function onSlideSize(){
-    size = sizeSlider.value;
-    //document.getElementById("sizeText").innerHTML = size;
-    Plotly.restyle("graphDiv", {'marker.size': size});
+    ptSize = sizeSlider.value;
+    document.getElementById("sizeText").innerHTML = ptSize;
+    Plotly.restyle("graphDiv", {'marker.size': ptSize});
 }
 
 function setUpGraph(){
@@ -251,7 +258,7 @@ function setUpGraph(){
             hoverinfo: "text",
             hovertext: wHoverText,
             textposition: "top",
-            opacity: 0.5
+            //opacity: opacity
         };
         var data = [trace1];
 
@@ -365,30 +372,21 @@ function onClickXYZ(){
     yOption = getYAxisSelection();
     zOption = getZAxisSelection();
 
-    var hoverText = getHoverText();
-
-    //set up new traces
-    var newTraces =[];
+    var counter =0;
 
     traceMap.forEach(function(value, key, map){
-        var theTrace ={
-            x: traceMap.get(key).get(xOption),
-            y: traceMap.get(key).get(yOption),
-            z: traceMap.get(key).get(zOption),
-            name: key,
-            mode: 'markers',
-            type: 'scatter3d',
-            hoverinfo: "text",
-            hovertext: hoverText.get(key),
-            opacity: 0.4
-        }
-        newTraces.push(theTrace);
+
+        Plotly.restyle("graphDiv", 'x', [traceMap.get(key).get(xOption)], counter);
+        Plotly.restyle("graphDiv", 'y', [traceMap.get(key).get(yOption)],counter);
+        Plotly.restyle("graphDiv", 'z', [traceMap.get(key).get(zOption)],counter);
+
+        counter++;
     });
 
     //clear annotations from previous graph
     clearAnnotations();
 
-    //delete previous traces
+    /*//delete previous traces
     var delArray=[];
     for (var t=0; t<traceMap.size; t++){
         delArray.push(t);
@@ -396,7 +394,7 @@ function onClickXYZ(){
 
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", newTraces);
-
+*/
     //reset axis titles based on new x,y,z
     var layoutUpdate ={
         'scene.xaxis.title': xOption,
@@ -438,7 +436,7 @@ function onClickHover(){
             type: 'scatter3d',
             hoverinfo: "text",
             hovertext: hoverText.get(key), //for each trace, get the array of text from the map
-            opacity: 0.4
+            //opacity: 0.4
         }
         newTraces.push(theTrace);
     });
@@ -541,7 +539,7 @@ function onClickTraceBtn(){
             type: 'scatter3d',
             hoverinfo: "text",
             hovertext: hoverText.get(val),
-            opacity: 0.4
+            // opacity: 0.4
         };
         traces.push(theTrace);
     });

@@ -6,10 +6,10 @@ body{
     display: inline;
     float:right;
     width: 30%;  
-    margin-top: 10pt;
-    margin-right: 40pt;
     vertical-align: middle;
     margin: 0 auto;
+    padding-right: 75pt;
+    padding-top: 30pt;
 }
 
 #allMenuContainer{
@@ -159,6 +159,10 @@ fieldset{
 
 #hoverlist{
     text-align: left;
+}
+
+.slideSpan{
+    float: left;
 }
 
 /*.modebar{

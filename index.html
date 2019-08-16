@@ -32,7 +32,7 @@
 
             <!-- Title Box -->
             <div id="titlebox" class="menuouterbox">
-                <p class= "menutitle">Enter Chart Title:</p>
+                <p class= "menutitle">Chart Title:</p>
                 <p></p>
                 <input id="titleInput" type=text onfocus="this.value=''"> 
                 <button id="titleBtn" class="button">Apply</button>
@@ -44,7 +44,7 @@
                 <!-- x-axis inner box -->
                 <div id="dataXDiv" class="menubox">
                     <fieldset id= "x-fieldset">
-                        <legend>X-Axis Field</legend>
+                        <legend>X</legend>
                         <select id="x-select" class="select"></select>
                     </fieldset>
                 </div>
@@ -52,7 +52,7 @@
                 <!-- y-axis inner box -->
                 <div id="dataYDiv" class="menubox">
                     <fieldset id ="y-fieldset">
-                        <legend>Y-Axis Field</legend>
+                        <legend>Y</legend>
                         <select id="y-select" class="select"></select>
                     </fieldset>
                 </div>
@@ -60,7 +60,7 @@
                 <!-- z-axis inner box -->
                 <div id="dataZDiv" class="menubox">
                     <fieldset id ="z-fieldset">
-                        <legend>Z-Axis Field</legend>
+                        <legend>Z</legend>
                         <select id="z-select" class="select"></select>
                     </fieldset>
                 </div>
@@ -91,13 +91,17 @@
             
             
             <div id= "sliderBox" class=menuouterbox>
-                Opacity:
-                <input id="opacSlider" type="range" min="0" max="1" value="0.5" step= ".01">
-                <span id = "opacText"></span>
+                <span class="slideSpan">Opacity</span>
+                <input id="opacSlider" type="range" min="0.01" max="1" value="1" step= "0.01"><br>
+                <span id="opacText">1</span>
                 <br>
-                Size:
-                <input id= "sizeSlider" type ="range" min="0" max ="20" value="6" step=".01">
-                <span id = "sizeText"></span>
+                <span class= "slideSpan">Point size</span>
+                <input id= "sizeSlider" type ="range" min="0.01" max ="20.00" value="6" step="0.01"><br>
+                <span id = "sizeText">6</span>
+                <br>
+                <span class="slideSpan">Font size</span>
+                <input id= "fontSlider" type ="range" min="1" max ="30" value="12" step="0.1"><br>
+                <span id = "fontText">12</span>
             </div>
             
         </div>
