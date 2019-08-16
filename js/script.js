@@ -7,6 +7,7 @@ var dataSize;
 
 var mdChoices =[];  
 var hoverText =[];
+var annots;
 
 var map;        
 var traceChoice = "all-data";
@@ -14,7 +15,6 @@ var traceMap = new Map();
 var origMap;
 var keys = [];
 var prevSize;
-var annots;
 
 var opacity;
 var ptSize;
@@ -72,7 +72,8 @@ function onClickFileGo(){
 
     //call methods to set up the menus and the graph
     setUpMenus();
-    setUpGraph();  
+    setUpGraph(); 
+    resetSliderDefaults();
 }
 
 function setUpMenus(){
@@ -157,9 +158,6 @@ function setUpMenus(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
-    opacity = document.getElementById("opacSlider").value;
-    document.getElementById("opacText").innerHTML = opacity;
-
     //document.getElementById("annotDiv").style.display="inline-block";
 }
 
@@ -179,6 +177,17 @@ function onSlideSize(){
     ptSize = sizeSlider.value;
     document.getElementById("sizeText").innerHTML = ptSize;
     Plotly.restyle("graphDiv", {'marker.size': ptSize});
+}
+
+function resetSliderDefaults(){
+    opacSlider.value = 1;
+    document.getElementById("opacText").innerHTML= opacSlider.value;
+    
+    sizeSlider.value = 6;
+    document.getElementById("sizeText").innerHTML = sizeSlider.value;
+    
+    fontSlider.value = 12;
+    document.getElementById("fontText").innerHTML = fontSlider.value;
 }
 
 function setUpGraph(){
@@ -279,12 +288,13 @@ function setUpGraph(){
                 b:20,
                 t:30
             },
-            title: 'Enter Chart Title on Left',
+            title: 'Chart Title',
 
         };
         Plotly.newPlot('graphDiv', data, layout).then(() => setUpAnot());
 
     }); //end csv method
+
 } //end setUpGraph method
 
 function setUpAnot(){

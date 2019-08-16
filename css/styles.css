@@ -13,19 +13,38 @@ body{
 }
 
 #allMenuContainer{
-    margin-left: 10px;
+}
+
+.bigDiv{
+    margin: 10pt;
+    border: 2px solid gray;
+    height: auto;
+    width: 700px;
+    overflow: auto;
+    padding: 10pt;
+    margin-top: 15pt;
+    border-radius: 15px;
+}
+
+.divlegend{
+    font-family: "Calibri";
+    font-size: 14pt;
+    color: gray;
+    font-weight: 600
 }
 
 .menuouterbox{
     float: left;
     height: auto;
-    border-radius: 25px;
+    border-radius: 15px;
     border: 2px solid turquoise;
     border-width: medium;
     text-align: center;
     align-content: center;
     padding: 10px;
-    margin: 10pt;
+    margin: 5pt;
+    margin-left: 10pt;
+    margin-right: 10pt;
     color:black;
     font-family: "Calibri";
     font-size: 14pt;
@@ -35,18 +54,16 @@ body{
 
 #openFileBox{
     display:inline-block;
-    width: 200px;
-    height: 150px;
+    width: 150px;
+    height: 193px;
     white-space: nowrap;
     overflow: hidden;
 }
 
-#fileOpenBtn{
-    float:left; 
-}
 
 #goFileBtn{
-    float: right;
+    float: left;
+    margin-top: 3pt;
 }
 
 #fileNameSpan{
@@ -58,29 +75,30 @@ body{
     text-align: left;
 }
 
-.subtext{
-    font-size: 13pt;
-}
-
 .menutitle{
-    margin:2pt;
-    padding: 3pt;
+    margin-bottom:5pt;
+    margin-top: 0pt;
+    padding: 2pt;
     color: black;
     text-align: center;
-    border-radius: 15pt;
-    background-color: mediumturquoise;
+    border-radius:5pt;
+    background-color: lightgrey;
+    border: 2pt solid;
+    border-color: darkturquoise;
 }
 
 .button {
-    background-color: darkturquoise;
+    background-color: darkgray;
     color: black;
-    border-radius: 25px;
+    border-width: 1pt;
+    border-color: darkgray;
+    border-radius: 5px;
     font-family: "Calibri";
-    font-size: 14pt;
+    font-size: 12pt;
 }
 
 .button:hover{
-    background-color: darkgray;
+    background-color: dimgray;
 }
 
 #titlebox{
@@ -91,21 +109,19 @@ body{
 #titleInput{
     border-radius: 15px;
     height: 14pt;
-    padding: 4pt
+    padding: 4pt;
+    margin-bottom: 8pt;
+    width: 130px;
 }
 
 #axisMenuContainer{
-    float: left;
-    height: 135px;;
+    height: auto;
     width: auto;
     max-width: 500px;
+    border: none;
     overflow: auto; 
-    border: 2px solid turquoise;
-    border-radius: 25px;
-    border-width:medium;
     text-align: center;
-    vertical-align:middle;
-    padding: 10px;
+    padding: 2px;
 }
 
 .menubox{
@@ -115,41 +131,51 @@ body{
     font-family: "Calibri";
     font-size: 14pt;
     margin: 5pt;
-    margin-top: 8pt;
-    margin-bottom: 8pt;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
     width: auto;
     height: auto;
+    border-color: darkturquoise;
 }
 
 fieldset{
     text-align: center;
     border-radius: 10px;
     border-color: lightgray;
-    padding: 10pt;
+    padding: 8pt;
     padding-bottom: 15pt;
+}
+
+.axislegend{
+    color: gray;
+    font-weight:900;
 }
 
 .select{
     border-radius: 5px;
     font-size: 12pt;
     font-family: "Calibri";
-    max-width: 300px;
+    max-width: 100px;
+    min-width: 70px;
     overflow: auto;
+    margin-top: 5pt;
 }
 
 #traceBox{
-    height: 135px;
-    max-width: 500px;
+    height: auto;
+    padding: 10pt;
+    max-width: 200px;
+    min-width: 100px;
 }
 
 #hovWrapper {
-    width: 175px;
+    width: 160px;
     height: 250px;
 }
 
 #hovListDiv {
     height: 150px; 
-    width: 165px;
+    width: 150px;
     overflow: auto;
     border: 1pt solid lightgray;
     border-radius: 5px;
@@ -159,24 +185,34 @@ fieldset{
 
 #hoverlist{
     text-align: left;
+    padding: 5pt;
+    margin: 5pt;
 }
 
 .slideSpan{
     float: left;
 }
 
+#xyzBtn {
+    margin-top: 25pt;
+}
+.slider{
+    
+}
+
 /*.modebar{
-    display: none !important;
+display: none !important;
 }*/
 
 /*#annotDiv{
-    display:none;
-    float: right;
-    font-family: "Calibri";
-    border: 1pt dotted gray;
-    border-radius: 15pt;
-    padding: 2pt;
-    text-align: center;
+display:none;
+float: right;
+font-family: "Calibri";
+border: 1pt dotted gray;
+border-radius: 15pt;
+padding: 2pt;
+text-align: center;
 }*/
+
 
 
