@@ -386,15 +386,6 @@ function onClickXYZ(){
     //clear annotations from previous graph
     clearAnnotations();
 
-    /*//delete previous traces
-    var delArray=[];
-    for (var t=0; t<traceMap.size; t++){
-        delArray.push(t);
-    }
-
-    Plotly.deleteTraces("graphDiv", delArray);
-    Plotly.addTraces("graphDiv", newTraces);
-*/
     //reset axis titles based on new x,y,z
     var layoutUpdate ={
         'scene.xaxis.title': xOption,
@@ -421,36 +412,13 @@ function onClickHover(){
 
     hoverText = getHoverText(); //retrieve the hoverText map
 
-    xOption = getXAxisSelection();
-    yOption = getYAxisSelection();
-    zOption = getZAxisSelection();
-
-    var newTraces =[];
-    traceMap.forEach(function(value, key, map){
-        var theTrace ={
-            x: traceMap.get(key).get(xOption),
-            y: traceMap.get(key).get(yOption),
-            z: traceMap.get(key).get(zOption),
-            name: key,
-            mode: 'markers',
-            type: 'scatter3d',
-            hoverinfo: "text",
-            hovertext: hoverText.get(key), //for each trace, get the array of text from the map
-            //opacity: 0.4
-        }
-        newTraces.push(theTrace);
-    });
-
-    //delete previous traces
-    var delArray=[];
-    for (var t=0; t<traceMap.size; t++){
-        delArray.push(t);
-    }
-
     clearAnnotations(); //clear all previous annotations
 
-    Plotly.deleteTraces("graphDiv", delArray);
-    Plotly.addTraces("graphDiv", newTraces);
+    var counter =0;
+    traceMap.forEach(function(value, key, map){    
+        Plotly.restyle("graphDiv", "hovertext", [hoverText.get(key)], counter);
+        counter++;
+    });
 }
 
 function onClickTraceBtn(){
@@ -539,7 +507,6 @@ function onClickTraceBtn(){
             type: 'scatter3d',
             hoverinfo: "text",
             hovertext: hoverText.get(val),
-            // opacity: 0.4
         };
         traces.push(theTrace);
     });
@@ -551,6 +518,8 @@ function onClickTraceBtn(){
     }
     Plotly.deleteTraces("graphDiv", delArray);
     Plotly.addTraces("graphDiv", traces);
+    onSlideOpac(); //keep opacity to current user choice
+    onSlideSize(); //keep point size to current user choice
 }
 
 function getHoverText(){
