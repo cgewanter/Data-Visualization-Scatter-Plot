@@ -1,7 +1,8 @@
 /* 3d-scatter-plot/js/script.js 
     - C. Gewanter  */
 
-var filename;       
+var filename; 
+var theCsv;
 var colHeaders;     
 var dataSize;
 
@@ -23,6 +24,7 @@ var fontSize;
 var xOption;
 var yOption;
 var zOption;
+
 
 document.getElementById("fileOpenBtn").onclick=function(){onClickOpenFile()};
 
@@ -70,20 +72,25 @@ function onClickFileGo(){
     chrome security did not let file access*/
     //filename = document.getElementById("file-input").value;
 
-    //call methods to set up the menus and the graph
-    setUpMenus();
-    setUpGraph(); 
+    //call method to set up the menus and the graph
+    setUpPage();
+    //setTimeout(1000, function(){console.log("timeout")});
+    setUpGraph();
     resetSliderDefaults();
 }
 
-function setUpMenus(){
+function setUpPage(){
 
     //Plotly csv function to read data from file
     Plotly.d3.csv(filename, function(csv){
 
+        theCsv = csv;
+        console.log("theCsv", theCsv);
+
         //extract the column headers from the file
         csv.forEach(function(row){
             colHeaders = Object.keys(row);
+            console.log(colHeaders);
         });
 
         var theHovDiv = document.getElementById("hoverlist");
@@ -158,6 +165,7 @@ function setUpMenus(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
+    //setUpGraph();
     //document.getElementById("annotDiv").style.display="inline-block";
 }
 
@@ -182,17 +190,20 @@ function onSlideSize(){
 function resetSliderDefaults(){
     opacSlider.value = 1;
     document.getElementById("opacText").innerHTML= opacSlider.value;
-    
+
     sizeSlider.value = 6;
     document.getElementById("sizeText").innerHTML = sizeSlider.value;
-    
+
     fontSlider.value = 12;
     document.getElementById("fontText").innerHTML = fontSlider.value;
 }
 
 function setUpGraph(){
 
+    //console.log("in setUpGraph()");
     Plotly.d3.csv(filename, function(err, rows){
+
+        //console.log(theCsv);
 
         //define the unpack function
         function unpack(rows, key){
@@ -210,6 +221,7 @@ function setUpGraph(){
             dataSize = value.length;
             map.set(key, value);
         }
+        //console.log("Map", map);
 
         /* put all data into traceMap as one trace with "all-data" as the key. 
         This traceMap will eventually be reset when a trace-color filter field is picked, 
@@ -569,9 +581,8 @@ function getInnerHovText(key){
     return innerHover;
 }
 
-/*the following function contains the code for the 'Clear-Annotations' button */ 
+/*the following function contains the code for the commented out 'Clear-Annotations' button */ 
 function clearAnnotations(){
     annots =[];
     Plotly.relayout("graphDiv", {'scene.annotations':[]});
 }
-
