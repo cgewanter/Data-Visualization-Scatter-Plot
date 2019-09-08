@@ -1,5 +1,12 @@
-/* 3d-scatter-plot/js/script.js 
-    - C. Gewanter  */
+/* script.js
+
+-Chana Gewanter
+cgewanter1@gmail.com
+
+This file contains the script with all functions to read the csv file,
+set up the layout and graph, and handle user input to customize the graph.
+
+ */
 
 var filename; 
 var theCsv;
@@ -47,9 +54,12 @@ sizeSlider.oninput= function(){onSlideSize()};
 var fontSlider = document.getElementById("fontSlider");
 fontSlider.oninput=function(){onSlideFont()};
 
+//on click function for commented out button to clear all annotations
 //document.getElementById("clearAnnBtn").onclick=function(){clearAnnotations()};
 
 function onClickOpenFile(){
+    
+    //right now, in order to work, there must be a copy of the .csv file (with the same name) in the directory with the .html file
 
     //use the input tag's click() function to open a file-picker window.
     var fileInput = document.getElementById("file-input");
@@ -61,7 +71,6 @@ function onClickOpenFile(){
         var name = event.srcElement.files[0].name;
         document.getElementById("fileNameSpan").innerHTML = "&nbsp;" + name;
 
-        //(temp) set filename to open (must be in same directory as html file):
         filename = name;
     }
 }
@@ -165,7 +174,6 @@ function setUpPage(){
     for(var i=0; i< menus.length; i++){
         menus[i].style.display="inline-block";
     }
-    //setUpGraph();
     //document.getElementById("annotDiv").style.display="inline-block";
 }
 
@@ -202,8 +210,6 @@ function setUpGraph(){
 
     //console.log("in setUpGraph()");
     Plotly.d3.csv(filename, function(err, rows){
-
-        //console.log(theCsv);
 
         //define the unpack function
         function unpack(rows, key){

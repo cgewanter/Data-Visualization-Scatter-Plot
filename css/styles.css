@@ -1,3 +1,13 @@
+/*
+styles.css
+
+-Chana Gewanter
+cgewanter1@gmail.com
+
+This file contains all css styles for the page. 
+
+*/
+
 body{
     width: 80%;
 }
@@ -202,10 +212,17 @@ fieldset{
     
 }
 
-/*.modebar{
+/*
+Uncomment the following .modebar section to hide the Plotly toolbar that 
+currently appears above the graph.
+*/
+/*
+.modebar{
 display: none !important;
 }*/
 
+
+/*
 /*#annotDiv{
 display:none;
 float: right;
