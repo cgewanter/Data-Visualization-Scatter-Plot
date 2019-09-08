@@ -6,6 +6,11 @@ cgewanter1@gmail.com
 This file contains the script with all functions to read the csv file,
 set up the layout and graph, and handle user input to customize the graph.
 
+**
+Because of chrome access rules, right now there must be a copy of the 
+the csv file (with identical name) in the same directory as index.html
+**
+
  */
 
 var filename; 
